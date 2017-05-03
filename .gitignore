@@ -1,0 +1,8 @@
+nb-configuration.xml
+target/classes/Actions/Action.class
+*.class
+target/endorsed/javaee-endorsed-api-7.0.jar
+*.war
+target/gustatIHM-1.0-SNAPSHOT/Tomcat.dpf
+*.netbeans_automatic_build
+*.lst

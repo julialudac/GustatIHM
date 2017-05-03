@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Accueil client</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+    </head>
+    <body>
+        
+        <!--header-->
+        <header>
+            <div id="divLogo"> <img src=""/> </div>    
+            <div>Gustat'IF : Livraison à domicile</div>
+            <input type="submit" value="Non connecté" disabled="disabled" />
+        </header>
+        <!-- div principal -->
+        <div>
+            <h1 align="center">Bienvenue sur Gustat'IF ! Vous n'êtes pas connecté.</h1>
+            <h2>Connexion</h2>
+            <form action="./ActionServlet" method="POST">
+                <label for="email">E-mail utilisateur :</label> <input type="text" id="email" name="email" placeholder="<mail>"/> <br/>
+                <label for="mdp">Mot de passe : </label> <input type="password" id="mdp" name="mdp" placeholder="<mdp>"/> </br>
+                <input type="submit" value="Se connecter" name='action' />
+            </form>
+            <h2>Pas de compte ? Inscrivez-vous gratuitement ! </h2>
+            <form action="./ActionServlet" method="POST">
+                <label for="prenom">Prénom : </label> <input type="text" id="prenom" name="prenom" placeholder="<pnom>"/> <br/>
+                <label for="nom">Nom : </label> <input type="text" id="nom" name="nom" placeholder="<nom>"/> </br>
+                <label for="adrMail">Adresse mail : </label> <input type="text" id="adrMail" name="adrMail" placeholder="<mail>"/> <br/>
+                <label for="adrLivraison">Adresse de livraison : </label> <input type="text" id="adrLivraison" name="adrLivraison" placeholder="<adr>"/> </br>
+                <label for="cp">Code postal : </label> <input type="text" id="cp" name="cp" placeholder="<cp>"/>
+                <label for="ville">Ville : </label> <input type="text" id="ville" name="ville" placeholder="<ville>"/></br>
+                <input type="reset" value="annuler"/><input type="submit" value="s'enregistrer" name='action'/>
+            </form>
+            <!-- footer -->
+            <footer>
+                <span><a href='conditions.html'>Conditions d'utilisation</a></span>
+                <span><a href='politique.html'>Politique de confidentialité</a></span>
+                <span><a href='mentions.html'>Mentions légales</a></span>
+            </footer>
+           
+        
+        </div>
+    </body>
+</html>
