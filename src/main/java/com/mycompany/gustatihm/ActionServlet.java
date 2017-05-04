@@ -34,9 +34,6 @@ public class ActionServlet extends HttpServlet {
         JpaUtil.init();
     }
 
-    
-    
-    
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse reponse) throws ServletException, IOException {
         System.out.println("je suis dans service");
