@@ -33,6 +33,12 @@ public class ActionServlet extends HttpServlet {
         System.out.println("init : fabrique jpaUtil");
         JpaUtil.init();
     }
+    
+    @Override
+    public void destroy() {
+        JpaUtil.destroy();
+        super.destroy();
+    }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse reponse) throws ServletException, IOException {
@@ -55,6 +61,10 @@ public class ActionServlet extends HttpServlet {
                action = new ConnectionAction();
                action.execute(request,reponse);
                break;
+           case "s'enregistrer":
+              action = new InscriptionAction();
+              action.execute(request,reponse);
+              break;   
        }
        
        

@@ -9,8 +9,123 @@ and open the template in the editor.
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+        <script language="javascript">
+            var defaultColor="#ffffff";
+            var overColor="yellow";
+            var clickColor="pink";
+            var chooseRow=9999;
+            function over_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=overColor;
+            }
+            function remove_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=defaultColor;
+            }
+            function click_color(obj){
+                console.log("In function click");
+                var tb=obj.parentNode;
+                if(chooseRow!=9999){
+                    var lastObj=tb.rows[chooseRow];
+                    lastObj.style.backgroundColor=defaultColor;
+                }
+                chooseRow=obj.rowIndex;
+                obj.style.backgroundColor=clickColor;        
+                
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'GET',
+                        data: {
+                            action: 'detailRestaurant',
+                            id: chooseRow+1
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var idResto = data ;
+                        var contenuHtml = '<h2>'+idResto.denomination+'</h2>' 
+                                            + '<div>'+'<h3>Adresse</h3>'
+                                            + idResto.adresse+'</div>'
+                                            + '<div>'+'<h3>Description</h3>'
+                                            +  idResto.description+'</div>';
+                        $('#DetailsRestaurant').html(contenuHtml);
+                    })
+                    .fail(function() {
+                        $('#DetailsRestaurant').html('ERREUR de chargement');
+                    })
+                    .always(function() {
+                        //
+                    });
+                });
+            }
+        </script>
     </head>
     <body>
-        <div>TODO write content</div>
+        <!--header-->
+        <header>
+            <div id="divLogo"> <img src=""/> </div>    
+            <button type="button">Restaurants</button>
+            <button type="button">Commande</button>
+            <button type="button">Validation</button>
+            <input type="submit" id="connection" value="v"/>
+            <script>
+                var get = window.location.search.substring(1);
+                if(get.length > 1)
+                {
+                    var userName = get.substring(get.indexOf("=")+1);
+                    console.log(userName);
+                    document.getElementById("connection").value = userName;  
+                }
+            </script>
+        </header>
+        <div id="Restaurants">
+            <h1 align="center">Choix du restaurant</h1>
+            <h2>Veuillez selectionner un restaurant</h2>
+            <div id='listeRestaurants'>
+                <span>chargement en cours...</span>
+            </div>
+            <div id='DetailsRestaurant'>
+                <span>rien choisi</span>
+            </div>
+            <script>
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'getRestaurants'
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var restaurants = data.restoos;
+                        var contenuHtml = '<table>';
+                        var i;
+                        for (i = 0; i < restaurants.length; i++) {
+                            //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+                            contenuHtml += '<tr onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td> ' + restaurants[i].denomination + ' </td> <td> ' + restaurants[i].adresse + '</td></tr>';
+                        }
+                        contenuHtml += '</table>';
+                        $('#listeRestaurants').html(contenuHtml);
+                    })
+                    .fail(function() {
+                        $('#listeRestaurants').html('ERREUR de chargement');
+                    })
+                    .always(function() {
+                        //
+                    });
+                });
+            </script>
+        
+            <button type="button">Suivant</button>
+            <!-- footer -->
+            <footer>
+                <span><a href='conditions.html'>Conditions d'utilisation</a></span>
+                <span><a href='politique.html'>Politique de confidentialité</a></span>
+                <span><a href='mentions.html'>Mentions légales</a></span>
+            </footer>        
+        </div> 
     </body>
 </html>

@@ -12,7 +12,41 @@ and open the template in the editor.
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
     </head>
     <body>
-        
+        <div id="info" class="alert alert-danger">
+        </div>
+
+        <script>
+
+        $('#info').hide();
+
+        var get = window.location.search.substring(1);
+
+        if(get.length > 1)
+        {
+            var nb = parseInt(get.substring(get.indexOf("=")+1));
+
+            $('#info').show();
+
+            switch(nb)
+            {
+                case 1:
+                    $('#info').html("Ce mail ne correspond à aucun utilisateur.");
+                    break;
+
+                case 2:
+                    $('#info').html("Votre compte a bien ete cree.");
+                    break;
+
+                case 3:
+                    $('#info').html("La creation de votre compte a malheureusement echoue.");
+                    break;
+                
+                default:
+                $('#info').hide();
+            }
+        }
+
+        </script>
         <!--header-->
         <header>
             <div id="divLogo"> <img src=""/> </div>    

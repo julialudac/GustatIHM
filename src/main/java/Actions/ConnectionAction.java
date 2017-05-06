@@ -25,30 +25,34 @@ public class ConnectionAction extends Action{
         // récupération des param
         String email = request.getParameter("email");
         String mdp = request.getParameter("mdp");
-       // Client cl = ServiceMetier.connexionClientEmail("asing8183@free.fr", 127);
-        Client cl = ServiceMetier.findAllClients().get(0);
- 
+        long mdpl = Long.parseLong(mdp);
+        System.out.println(email);
+        System.out.println(mdpl);
+        Client cl = null;
+        try {
+            cl = ServiceMetier.connexionClientEmail(email, mdpl);
+            //System.out.println(cl);
+        } catch (Exception ex) {
+            Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
        
-        System.out.println("Email :" +email +" et mdp :" + Long.parseLong(mdp) );
-        
-        // Gestion cas
-            // cas données manquantes
         if (cl!=null){
             //TODO:enregistrer le client
+            System.out.println("Client trouvé");
             System.out.println(cl);
             try {
-                reponse.sendRedirect("choixRestaurant.html");
+                reponse.sendRedirect("choixRestaurant.html?connection="+cl.getPrenom());
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             try {
                 System.out.println("Client pas trouvé");
-                reponse.sendRedirect("accueilClient.html");
+                reponse.sendRedirect("accueilClient.html?info=1");
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        } 
         
     }
     

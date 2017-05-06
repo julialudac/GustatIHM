@@ -27,7 +27,9 @@ public class DetailRestaurantsAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
         // récupérer l'instance concerné 
         long id = parseLong((request.getParameter("id")));
+        //System.out.println(id);
         Restaurant restaurant = ServiceMetier.findAllRestaurants().get((int)id-1);
+        //System.out.println(restaurant);
         // convertir en JSON
         JsonObject jsonRestaurant = new JsonObject();
         jsonRestaurant.addProperty("denomination", restaurant.getDenomination());
