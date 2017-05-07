@@ -21,6 +21,7 @@ public class ConnectionAction extends Action{
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
+        
         //ConnectionSession connectionSession = ConnectionSession.INSTANCE;
         // récupération des param
         String email = request.getParameter("email");
@@ -48,6 +49,9 @@ public class ConnectionAction extends Action{
             System.out.println("Client trouvé");
             System.out.println(cl);
             try {
+                reponse.setContentType("text/html;charset=UTF-8");
+                System.out.println("prénom :"+cl.getPrenom());
+                // bizarre : ne supporte pas les caractères spéciaux, malgré UTF8
                 reponse.sendRedirect("choixRestaurant.html?connection="+cl.getPrenom());
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Choix du restaurant</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
@@ -65,24 +65,29 @@ and open the template in the editor.
     <body>
         <!--header-->
         <header>
-            <div id="divLogo"> <img src=""/> </div>    
+            <span id="divLogo"> <img src="logoGustatif.jpg"/> </span>    
             <button type="button">Restaurants</button>
             <button type="button">Commande</button>
             <button type="button">Validation</button>
-            <input type="submit" id="connection" value="v"/>
+            <select name="listeDeconn" style="width: 200px;">
+                <option value="v" id="userName">v</option>
+                <option value="deconnexion">Se déconnecter</option>
+            </select>
+            <!--<input type="submit" id="connection" value="v"/>-->
             <script>
                 var get = window.location.search.substring(1);
                 if(get.length > 1)
                 {
                     var userName = get.substring(get.indexOf("=")+1);
                     console.log(userName);
-                    document.getElementById("connection").value = userName;  
+                    document.getElementById("userName").innerHTML = userName;  
                 }
             </script>
         </header>
         <div id="Restaurants">
             <h1 align="center">Choix du restaurant</h1>
             <h2>Veuillez selectionner un restaurant</h2>
+            <div><input type="text" id="recherche" name="recherche" placeholder="Rechercher..." /></div>
             <div id='listeRestaurants'>
                 <span>chargement en cours...</span>
             </div>
@@ -91,6 +96,29 @@ and open the template in the editor.
             </div>
             <script>
                 $(function() {
+                    var restaurants;
+                    // changement de la liste à chaque caractère tapé
+                    // .change ne s'active que quand l'input perd le focus !
+                    // Je suis obligée d'utiliser une méthode qui consiste à combiner 2 events. 
+                    // source : http://stackoverflow.com/questions/8747439/detecting-value-change-of-inputtype-text-in-jquery
+                    $("#recherche").bind("change paste keyup", function() {
+                        console.log("L valeur de recherceh change");
+                        $('#listeRestaurants').html("chargement en cours...");
+                        var recherche = $("#recherche").val();
+                        if(restaurants!=null){
+                            var contenuHtml = '<table><thead><tr><th>Nom</th><th>Adresse</th></tr></thead>';
+                            contenuHtml+='<tbody>';
+                            for (i = 0; i < restaurants.length; i++) {
+                                if(recherche=="" || restaurants[i].denomination.indexOf(recherche)!=-1){
+                                    contenuHtml += '<tr onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td> ' + restaurants[i].denomination + ' </td> <td> ' + restaurants[i].adresse + '</td></tr>';
+                                }
+                            }
+                            contenuHtml += '</tbody></table>';
+                            $('#listeRestaurants').html(contenuHtml);
+                        }
+                    });
+                    
+                    
                     $.ajax({
                         url: './ActionServlet',
                         type: 'POST',
@@ -100,14 +128,16 @@ and open the template in the editor.
                         dataType: 'json'
                     })
                     .done(function(data) {
-                        var restaurants = data.restoos;
-                        var contenuHtml = '<table>';
+                        restaurants = data.restoos;
+                        var contenuHtml = '<table><thead><tr><th>Nom</th><th>Adresse</th></tr></thead>';
+                        contenuHtml+='<tbody>';
+                        console.log(contenuHtml);
                         var i;
                         for (i = 0; i < restaurants.length; i++) {
                             //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
                             contenuHtml += '<tr onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td> ' + restaurants[i].denomination + ' </td> <td> ' + restaurants[i].adresse + '</td></tr>';
                         }
-                        contenuHtml += '</table>';
+                        contenuHtml += '</tbody></table>';
                         $('#listeRestaurants').html(contenuHtml);
                     })
                     .fail(function() {
@@ -116,6 +146,7 @@ and open the template in the editor.
                     .always(function() {
                         //
                     });
+                    
                 });
             </script>
         
