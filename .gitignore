@@ -6,3 +6,4 @@ target/endorsed/javaee-endorsed-api-7.0.jar
 target/gustatIHM-1.0-SNAPSHOT/Tomcat.dpf
 *.netbeans_automatic_build
 *.lst
+src/main/webapp/WEB-INF/glassfish-web.xml
