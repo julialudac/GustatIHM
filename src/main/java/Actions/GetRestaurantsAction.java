@@ -25,10 +25,18 @@ public class GetRestaurantsAction extends Action{
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
+        System.out.println("Je suis dans action getRestaurants");
         JsonArray jsonListe = new JsonArray();
-        List<Restaurant> listeResto = ServiceMetier.findAllRestaurants();
+        String recherche = request.getParameter("nomRestaurant");
+        System.out.println("recherche: "+recherche);
+        List<Restaurant> listeResto ;
+        if (null==recherche){
+            listeResto = ServiceMetier.findAllRestaurants();
+        } else {
+            listeResto = ServiceMetier.searchRestaurants(recherche);
+        }
         for (Restaurant restaurant : listeResto) {
-            System.out.println(restaurant);
+            //System.out.println(restaurant);
             JsonObject jsonRestaurant = new JsonObject();
             jsonRestaurant.addProperty("id",restaurant.getId());
             jsonRestaurant.addProperty("adresse",restaurant.getAdresse());

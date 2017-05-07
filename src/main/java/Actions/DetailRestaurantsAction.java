@@ -5,14 +5,12 @@
  */
 package Actions;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.insa.gustatif.metier.modele.Restaurant;
 import com.insa.gustatif.metier.service.ServiceMetier;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.Long.parseLong;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -26,12 +24,13 @@ public class DetailRestaurantsAction extends Action{
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
         // récupérer l'instance concerné 
-        long id = parseLong((request.getParameter("id")));
-        //System.out.println(id);
+        long id = parseLong((request.getParameter("idRestaurant")));
+        System.out.println(id);
         Restaurant restaurant = ServiceMetier.findAllRestaurants().get((int)id-1);
         //System.out.println(restaurant);
         // convertir en JSON
         JsonObject jsonRestaurant = new JsonObject();
+        jsonRestaurant.addProperty("id", id);
         jsonRestaurant.addProperty("denomination", restaurant.getDenomination());
         jsonRestaurant.addProperty("adresse", restaurant.getAdresse());
         jsonRestaurant.addProperty("description", restaurant.getDescription());

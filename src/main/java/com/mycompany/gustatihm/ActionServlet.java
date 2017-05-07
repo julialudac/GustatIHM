@@ -62,9 +62,17 @@ public class ActionServlet extends HttpServlet {
                action.execute(request,reponse);
                break;
            case "s'enregistrer":
-              action = new InscriptionAction();
-              action.execute(request,reponse);
-              break;   
+               action = new InscriptionAction();
+               action.execute(request,reponse);
+               break;   
+           case "getProduits":
+               action = new GetProduitsAction();
+               action.execute(request,reponse);
+               break; 
+           case "detailProduits":
+               action = new DetailProduitAction();
+               action.execute(request,reponse);
+               break;     
        }
        
        
