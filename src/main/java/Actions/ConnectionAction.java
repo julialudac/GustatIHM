@@ -25,13 +25,20 @@ public class ConnectionAction extends Action{
         // récupération des param
         String email = request.getParameter("email");
         String mdp = request.getParameter("mdp");
-        long mdpl = Long.parseLong(mdp);
-        System.out.println(email);
-        System.out.println(mdpl);
+        // attention lors de la conversion du mdp
+        long mdpl = -123; // cette ID n'existe pas
+        try{
+            mdpl = Long.parseLong(mdp);
+        }catch(NumberFormatException e){
+            System.out.println("Le mdp entré n'est pas un nb");
+        }
         Client cl = null;
         try {
             cl = ServiceMetier.connexionClientEmail(email, mdpl);
-            //System.out.println(cl);
+            // A ne pas oublier, sinon le client sera quand même pris même si mauvais mdp
+            if(cl.getId()!=mdpl){
+                cl=null;
+            }
         } catch (Exception ex) {
             Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
         }

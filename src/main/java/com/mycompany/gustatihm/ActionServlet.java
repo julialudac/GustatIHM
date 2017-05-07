@@ -43,7 +43,6 @@ public class ActionServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse reponse) throws ServletException, IOException {
         System.out.println("je suis dans service");
-       // System.out.println(req.toString());
         String todo = request.getParameter("action");
         Action action;
         
