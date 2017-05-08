@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Accueil livreurs et gestionnaire</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+    </head>
+    <body>
+        <div id="info" class="alert alert-danger" style="color:red;">
+        </div>
+        
+        <script>
+    
+            // Toujours englober le code JQuery dans cette fonction !!!
+            $(function() {
+             
+                // ------------------ permet de contrôler la direction : on reste sur la page ou pas---------------
+                $('#info').hide();
+                $('#f').submit(function (evt) {
+                    if($('#mdp').val()==""){
+                        $('#info').show();
+                        $('#info').html("Veuillez entrer votre mot de passe.");
+                        evt.preventDefault();
+                    }
+                });
+                
+                // ------------------ permet de voir s'il y a une pop-up à afficher et laquelle ------------------
+                var get = window.location.search.substring(1);
+
+                if(get.length > 1){
+                    alert("Erreur : Aucun compte associé à ce mdp");
+                }
+                        
+
+            });
+            
+        </script>
+        
+        <!--header-->
+        <header>
+            <div id="divLogo"> <img src=""/> </div>    
+            <div>Gustat'IF : Livraison à domicile des clients</div>
+            <input type="submit" value="Non connecté" disabled="disabled" />
+        </header>
+        <!-- div principal -->
+        <div>
+            <!-- Authentification -->
+            <h1 align="center">Bienvenue sur Gustat'IF ! Vous n'êtes pas connecté.</h1>
+            <h2>Connexion</h2>
+            <form action="./ActionServlet" method="POST" id="f">
+                <label for="mdp">Mot de passe : </label> <input type="password" id="mdp" name="mdp" placeholder="<mdp>"/> </br>
+                <!-- pour distinguer avec les clients. -->
+                <input type="submit" value="Connexion" name='action' />
+            </form>
+            <!-- footer -->
+            <footer>
+                <span><a href='conditions.html'>Conditions d'utilisation</a></span>
+                <span><a href='politique.html'>Politique de confidentialité</a></span>
+                <span><a href='mentions.html'>Mentions légales</a></span>
+            </footer>        
+        </div>        
+    </body>
+</html>

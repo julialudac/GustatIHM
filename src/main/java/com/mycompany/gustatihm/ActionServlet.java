@@ -44,6 +44,7 @@ public class ActionServlet extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse reponse) throws ServletException, IOException {
         System.out.println("je suis dans service");
         String todo = request.getParameter("action");
+        System.out.println("Todo = "+todo);
         Action action;
         
         
@@ -68,8 +69,8 @@ public class ActionServlet extends HttpServlet {
                action = new GetProduitsAction();
                action.execute(request,reponse);
                break; 
-           case "detailProduits":
-               action = new DetailProduitAction();
+           case "Connexion":
+               action = new ConnectionNonClientAction();
                action.execute(request,reponse);
                break;     
        }
