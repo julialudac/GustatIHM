@@ -73,6 +73,9 @@ public class ActionServlet extends HttpServlet {
                action = new ConnectionNonClientAction();
                action.execute(request,reponse);
                break;     
+           case "getLivreurData":
+               
+               break;
        }
        
        

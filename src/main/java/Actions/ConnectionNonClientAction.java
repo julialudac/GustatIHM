@@ -9,10 +9,13 @@ import com.insa.gustatif.metier.modele.Client;
 import com.insa.gustatif.metier.modele.Livreur;
 import com.insa.gustatif.metier.service.ServiceMetier;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -22,6 +25,15 @@ public class ConnectionNonClientAction extends Action{
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
+        
+        // Session !!!
+        HttpSession session = request.getSession(true);
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(ConnectionNonClientAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         System.out.println("Je suisConnectionNonClient");
         
         String mdp = request.getParameter("mdp");
@@ -54,16 +66,20 @@ public class ConnectionNonClientAction extends Action{
             }
             // si livreur trouvé, direction itf livreur
             if (l!=null){
-                //TODO:enregistrer le livreur
+                // enregistrer l'id pour la session
+                session.setAttribute("id",mdpl);
                 System.out.println("Livreur trouvé");
                 System.out.println(l);
+                PrintWriter out = null; 
                 try {
+                    out = reponse.getWriter();
                     reponse.setContentType("text/html;charset=UTF-8");
-                    // bizarre : ne supporte pas les caractères spéciaux, malgré UTF8
+                    out.println(mdpl); // mais ça affiche sur fond blanc et la suite du code n'est pas "lue"
+                    out.close();
                     reponse.sendRedirect("itfLivreur.html");
                 } catch (IOException ex) {
                     Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }       
             // sinon redirection connexion
             } else {
                 try {
