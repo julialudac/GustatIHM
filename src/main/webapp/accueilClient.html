@@ -36,7 +36,7 @@ and open the template in the editor.
 
                 // en ce qui concerne f1
                 $('#f1').submit(function (evt) {
-                    var email = $('#mail').val();
+                    var email = $('#email').val();
                     if(email=="" || $('#mdp').val()==""){
                         $('#info').show();
                         $('#info').html("Veuillez compléter les champs de saisie de la connexion.");
@@ -64,9 +64,6 @@ and open the template in the editor.
                             contentDanger ="Veuillez indiquez une adresse mail valide !";
                             $("#adrMail").css("color", "red");
                         }
-                        else{
-                            $("#adrMail").css("color", "black");
-                        }
                         // vérif cp français
                         var cp = $('#cp').val();
                         var cpNb = parseInt(cp);
@@ -76,9 +73,6 @@ and open the template in the editor.
                             mauvFormat = true;
                             contentDanger +="   Veuillez indiquer un code postal fr valide !";
                             $('#cp').css("color", "red");
-                        }
-                        else{
-                            $("#cp").css("color", "black");
                         }
                         
                         // si l'un des 2 est au mauvais format
@@ -90,6 +84,14 @@ and open the template in the editor.
                         
                     }
                     
+                });
+                
+                // Ne pas oublier de recolorier en noir les champs rougis lorsqu'on clique dessus
+                $("#adrMail").focus(function(){
+                    $("#adrMail").css("color", "black");
+                });
+                $("#cp").focus(function(){
+                    $("#cp").css("color", "black");
                 });
 
                 // ------------------ permet de voir s'il y a une pop-up à afficher et laquelle ------------------
