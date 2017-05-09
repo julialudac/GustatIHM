@@ -41,6 +41,9 @@ public class GetRestaurantsAction extends Action{
             jsonRestaurant.addProperty("id",restaurant.getId());
             jsonRestaurant.addProperty("adresse",restaurant.getAdresse());
             jsonRestaurant.addProperty("denomination", restaurant.getDenomination());
+            jsonRestaurant.addProperty("latitude", restaurant.getLatitude());
+            jsonRestaurant.addProperty("longitude", restaurant.getLongitude());
+            jsonRestaurant.addProperty("description", restaurant.getDescription());
             jsonListe.add(jsonRestaurant);
         }
         JsonObject jsonContainer = new JsonObject();
