@@ -11,6 +11,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.steps.js"></script>
+        <!-- probleme de css: pour le div Validation, l'element <p id='p_adresseRestaurant'> n'affiche pas -->
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script language="javascript">
             var defaultColor="#ffffff";
@@ -330,7 +331,7 @@ and open the template in the editor.
             }
             function calculerSum(table,column){
                 var trs=table.getElementsByTagName('tr');
-                var start=1;//忽略第一行的表头
+                var start=0;
                 var total=0;
                 for(var i=start;i<trs.length;i++){
                     var td=trs[i].getElementsByTagName('td')[column];
@@ -342,6 +343,12 @@ and open the template in the editor.
             function retour1(){
                 document.getElementById("Restaurants").style.display="block";
                 document.getElementById("Commandes").style.display="none";
+                //var my_panier = document.getElementById("tab_panier");
+                $("#tab_panier tr").remove();
+                var my_span1 = document.getElementById("sum");
+                my_span1.innerHTML  = 0;
+                var my_span2 = document.getElementById("sum_validation");
+                my_span2.innerHTML  = 0;
             }
             function annulerCommande(){
                 //chaque fois on clique sur button suivant on va annuler un commande enregistre sur serveur(pas sur BD)
@@ -368,6 +375,54 @@ and open the template in the editor.
                 if (totalAPayer>0){
                     document.getElementById("Commandes").style.display="none";
                     document.getElementById("Validation").style.display="block";
+                    
+                    //jquery pour afficher l'adresse de client
+                    $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'POST',
+                            data: {
+                                action: 'getClientAdresse',
+                            },
+                            dataType: 'json'
+                        })
+                        .done(function(data) {
+                            var adresse = data.adresse;
+                            var contenuHtml = adresse;
+                            $('#p_adresseLivraison').html(contenuHtml);
+                        })
+                        .fail(function() {
+                            $('#p_adresseLivraison').html('ERREUR de chargement');
+                        })
+                        .always(function() {
+                            //
+                        });
+                    }); 
+                    
+                    //jquery pour afficher l'adresse de restaurant
+                    $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'POST',
+                            data: {
+                                action: 'getRestaurantAdresse',
+                            },
+                            dataType: 'json'
+                        })
+                        .done(function(data) {
+                            var str = data;
+                            var contenuHtml = str;
+                            $('#p_adresseRestaurant').html(contenuHtml);
+                        })
+                        .fail(function() {
+                            $('#p_adresseRestaurant').html('ERREUR de chargement');
+                        })
+                        .always(function() {
+                            //
+                        });
+                    }); 
+                    
+                    //partie pour copier le panier
                     var my_panier_validation = document.getElementById("table_panier_validation");
                     /*var newTrTH = document.createElement("tr");
                     var newTH1 = document.createElement("th");
@@ -383,7 +438,7 @@ and open the template in the editor.
                     var my_panier = document.getElementById("tab_panier");
                     var trs = my_panier.getElementsByTagName("tr");
                     var rows = my_panier.rows.length;
-                    for(var i=1; i<rows; i++){
+                    for(var i=0; i<rows; i++){
                         //console.log('dans boucle');
                         var newTR     = document.createElement("tr");
                         for(var j=0; j<3; j++){
@@ -515,8 +570,11 @@ and open the template in the editor.
             </div>
             <div id='div_panier'>
                 <h3>Votre panier actuel: </h3>
-                <table id='tab_panier'>
-                    <th>Nom</th><th>Quantite</th><th>Prix</th>
+                <table>
+                    <thead>
+                        <th>Nom</th><th>Quantite</th><th>Prix</th>
+                    </thead>
+                    <tbody id='tab_panier'></tbody>
                 </table>
                 <div>
                     Total a payer: <span id='sum'>0</span><br/>
@@ -539,13 +597,16 @@ and open the template in the editor.
                         </td>
                         <td>
                             Adresse de livraison:
-                            <p id='p_adresseLivraison:'>TODO</p>
+                            <p id='p_adresseLivraison'>TODO</p>
                         </td>
                     </tr>
                 </table>
                 <h3>Votre panier actuel: </h3>
-                <table id='table_panier_validation'>
-                    <th>Nom</th><th>Quantite</th><th>Prix</th>
+                <table>
+                    <thead>
+                        <th>Nom</th><th>Quantite</th><th>Prix</th>
+                    </thead>
+                    <tbody id='table_panier_validation'></tbody>
                 </table>
                 <div>
                     Total a payer: <span id='sum_validation'>0</span><br/>

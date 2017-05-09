@@ -93,6 +93,14 @@ public class ActionServlet extends HttpServlet {
                 action = new ConnectionNonClientAction();
                 action.execute(request,reponse);
                 break;
+            case "getClientAdresse":
+                action = new GetClientAdresseAction();
+                action.execute(request, reponse);
+                break;
+            case "getRestaurantAdresse":
+                action = new GetRestaurantAdresseAction();
+                action.execute(request, reponse);
+                break;
         }
     }
 
