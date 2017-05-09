@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Creation de Commande</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+        <script src="js/jquery.steps.js"></script>
+        <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
+        <script language="javascript">
+            var defaultColor="#ffffff";
+            var overColor="yellow";
+            var clickColor="pink";
+            var chooseRow=9999;
+            function over_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=overColor;
+            }
+            function remove_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=defaultColor;
+            }
+            function click_color(obj){
+                //alert("chooseRow="+chooseRow);
+                console.log("dans function clickcolor");
+                var tb=obj.parentNode;
+                if(chooseRow!=9999){
+                    var lastObj=tb.rows[chooseRow];
+                    lastObj.style.backgroundColor=defaultColor;
+                }
+                chooseRow=obj.rowIndex;
+                obj.style.backgroundColor=clickColor;        
+                
+                if(obj.id=="tr_restaurant"){
+                    //alert($(obj).find("#idResto").text());
+                    $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'GET',
+                            data: {
+                                action: 'detailRestaurant',
+                                idRestaurant: $(obj).children().find("#idResto").text()
+                            },
+                            dataType: 'json'
+                        })
+                        .done(function(data) {
+                            var resto = data;
+                            var contenuHtml = '<h2>'+resto.denomination+'</h2>' 
+                                                + '<div>'+'<h3>Adresse</h3>'
+                                                + resto.adresse+'</div>'
+                                                + '<div>'+'<h3>Description</h3>'
+                                                +  resto.description+'</div>'
+                                                + '<div id="idRestaurant" style="display:none">'+resto.id+'</div>';
+                            $('#DetailsRestaurant').html(contenuHtml);
+                        })
+                        .fail(function() {
+                            $('#DetailsRestaurant').html('ERREUR de chargement');
+                        })
+                        .always(function() {
+                            //
+                        });
+                    });
+                } else {
+                    //alert("asdasd");
+                    //alert($(obj).find("#idProd").text());
+                    $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'GET',
+                            data: {
+                                action: 'detailProduits',
+                                idProduit: $(obj).children().find("#idProd").text(),
+                                idRestaurant: document.getElementById("idRestaurant").innerHTML
+                            },
+                            dataType: 'json'
+                        })
+                        .done(function(data) {
+                            var produit = data;
+                            var contenuHtml = '<h2 id="nomProduit">'+produit.denomination+'</h2>' 
+                                                + '<div>'+'<h3>Description</h3>'
+                                                +  produit.description+'</div>'
+                                                + '<div id="idProduit" style="display:none">'+produit.id+'</div>'
+                                                + '<div id="prixProduit" style="display:none">'+produit.prix+'</div>';
+                            $('#DetailsProduits').html(contenuHtml);
+                        })
+                        .fail(function() {
+                            $('#DetailsProduits').html('ERREUR de chargement');
+                        })
+                        .always(function() {
+                            //
+                        });                       
+                    });
+                    document.getElementById("total").innerHTML  = 0;
+                }
+            }
+            function searchRestaurant(){
+                chooseRow=9999;
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'getRestaurants',
+                            nomRestaurant: $("#searchR").val()
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var restaurants = data.restoos;
+                        var contenuHtml = '<table><th>Nom</th><th>Adresse</th>';
+                        var i; 
+                        for (i = 0; i < restaurants.length; i++) {
+                            //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+                            contenuHtml += '<tr id="tr_restaurant" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td id="nomResto"> ' 
+                                    + restaurants[i].denomination + '<div id="idResto" style="display:none">'
+                                    + restaurants[i].id + '</div></td><td>'
+                                    + restaurants[i].adresse + '</td></tr> ';
+                        }
+                        contenuHtml += '</table>';
+                        $('#listeRestaurants').html(contenuHtml);
+                    })
+                    .fail(function() {
+                        $('#listeRestaurants').html('ERREUR de chargement');
+                    })
+                    .always(function() {
+                        //
+                    });
+                });
+            } 
+            function searchProduit(){
+                chooseRow=9999;
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'getProduits',
+                            idRestaurant: document.getElementById("idRestaurant").innerHTML,
+                            nomProduit: $("#searchP").val()
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var produits = data.produits;
+                        var contenuHtml = '<table><th>Nom</th><th>Prix</th>';
+                        var i; 
+                        for (i = 0; i < produits.length; i++) {
+                                //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+                                contenuHtml += '<tr id="tr_produits" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td> ' 
+                                        + produits[i].denomination + '<div id="idProd" style="display:none">'
+                                        + produits[i].id+'</td><td> '
+                                        + produits[i].prix + '</td><tr> ';
+                            }
+                        contenuHtml += '</table>';
+                        $('#listeProduits').html(contenuHtml);
+                    })
+                    .fail(function() {
+                        $('#listeProduits').html('ERREUR de chargement');
+                    })
+                    .always(function() {
+                        //
+                    });
+                });
+            }
+            function suivant1(){
+                chooseRow=9999;
+                var divDetailsRestaurant = document.getElementById("DetailsRestaurant");
+                var div_l = divDetailsRestaurant.getElementsByTagName("div").length;
+                var id = 0;
+                //console.log(div_l);
+                if (div_l>0){
+                    id = document.getElementById("idRestaurant").innerHTML;
+                    //window.location.href=("choixDesProduits?idRestaurant="+id);
+                    document.getElementById("Restaurants").style.display="none";
+                    document.getElementById("Commandes").style.display="block";
+                    $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'POST',
+                            data: {
+                                action: 'getProduits',
+                                idRestaurant: id,
+                                nomProduit: $("#searchP").val()
+                            },
+                            dataType: 'json'
+                        })
+                        .done(function(data) {
+                            var produits = data.produits;
+                            var contenuHtml = '<table><th>Nom</th><th>Prix</th>';
+                            var i; 
+                            for (i = 0; i < produits.length; i++) {
+                                //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+                                contenuHtml += '<tr id="tr_produits" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td> ' 
+                                        + produits[i].denomination + '<div id="idProd" style="display:none">'
+                                        + produits[i].id+'</td><td> '
+                                        + produits[i].prix + '</td><tr> ';
+                            }
+                            contenuHtml += '</table>';
+                            $('#listeProduits').html(contenuHtml);
+                        })
+                        .fail(function() {
+                            $('#listeProduits').html('ERREUR de chargement');
+                        })
+                        .always(function() {
+                            //
+                        });
+                    });
+                } else {
+                    alert("choisir un restaurant");
+                }
+            }
+            function creerCommande(){
+                console.log("dans function creerCommande");
+                //chaque fois on clique sur button suivant on va creer un commande enregistre sur serveur(pas sur BD)
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'creerCommande',
+                            idRestaurant: document.getElementById("idRestaurant").innerHTML
+                        },
+                        dataType: 'json'
+                    });
+                });
+            }
+            function calculer(){
+                var n = parseInt(document.getElementById("quantite").value);
+                //console.log("dans calculer");
+                //console.log("n="+n);
+                var prix = parseInt($('#prixProduit').text());
+                //console.log("prix="+prix);
+                var my_span = document.getElementById("total");
+                my_span.innerHTML  = n*prix;
+                //console.log("n*prix="+n*prix);
+            }
+            function ajouter(){
+                var divDetailsProduit = document.getElementById("DetailsProduits");
+                var div_l = divDetailsProduit.getElementsByTagName("div").length;
+                var re =  /^[0-9]+.?[0-9]*$/;
+                var total = document.getElementById("total").innerHTML;
+                if (div_l<0){
+                    alert("choisir un produit");
+                } if (!re.test(total)){
+                    alert("choisir la quantite");
+                } else if(parseInt(total)<=0){
+                    alert("la quantite doit etre positive");
+                } else {
+                    var nomProduit = $('#nomProduit').text();
+                    var quantite = document.getElementById("quantite").value;
+                    //var prix = $('#prixProduit').text();
+                    var my_panier = document.getElementById("tab_panier");
+                    var newTR     = document.createElement("tr");
+                    var newNom    = document.createElement("td");
+                    var newText1  = document.createTextNode(nomProduit);
+                    var newQuantite    = document.createElement("td");
+                    newQuantite.id = "td_quantite";
+                    var newText2  = document.createTextNode(quantite);
+                    var newPrix    = document.createElement("td");
+                    newPrix.id = "td_prix";
+                    var newText3  = document.createTextNode(total);
+                    var idP = document.createElement("div");
+                    idP.style = "display:none";
+                    idP.id = "div_idProduit";
+                    var newTextId  = document.createTextNode($("#idProduit").text());
+                    var supprime = document.createElement("img");
+                    supprime.id = "delete";
+                    supprime.style = "CURSOR: pointer";
+                    supprime.src="delete.png";
+                    supprime.height = "17.5";
+                    supprime.width = "17.5";
+                    supprime.onclick = function () {  
+                        supprimer(this);  
+                    }   
+                    idP.appendChild(newTextId);
+                    newNom.appendChild(newText1);
+                    newQuantite.appendChild(newText2);
+                    newPrix.appendChild(newText3);
+                    newNom.appendChild(supprime);
+                    newNom.appendChild(idP);
+                    newTR.appendChild(newNom);
+                    newTR.appendChild(newQuantite);
+                    newTR.appendChild(newPrix);
+                    my_panier.appendChild(newTR);
+                    //chaque fois on clique sur ajouter, on va maj le commande en serveur
+                    $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'POST',
+                            data: {
+                                action: 'modifierCommande',
+                                but: 'ajout',
+                                idProduit: $("#idProduit").text(),
+                                quantite: quantite
+                            },
+                            dataType: 'json'
+                        })
+                    });
+                }
+                var my_span1 = document.getElementById("sum");
+                my_span1.innerHTML  = calculerSum(document.getElementById("tab_panier"),2);
+                var my_span2 = document.getElementById("sum_validation");
+                my_span2.innerHTML  = calculerSum(document.getElementById("tab_panier"),2);
+            }
+            function supprimer(obj){
+                var tr=obj.parentNode.parentNode;  
+                //chaque fois on clique sur image supprimer, on va maj le commande en serveur
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'modifierCommande',
+                            but: 'supprime',
+                            idProduit: $(tr).children().find("#div_idProduit").text(),
+                            quantite: $(tr).find("#td_quantite").text()
+                        },
+                        dataType: 'json'
+                    })
+                });
+                var tbody=tr.parentNode;  
+                tbody.removeChild(tr);  
+                var my_span = document.getElementById("sum");
+                my_span.innerHTML  = calculerSum(document.getElementById("tab_panier"),2);
+            }
+            function calculerSum(table,column){
+                var trs=table.getElementsByTagName('tr');
+                var start=1;//忽略第一行的表头
+                var total=0;
+                for(var i=start;i<trs.length;i++){
+                    var td=trs[i].getElementsByTagName('td')[column];
+                    var t=parseFloat(td.innerHTML);
+                    if(t)total+=t;
+                }
+                return total;
+            };
+            function retour1(){
+                document.getElementById("Restaurants").style.display="block";
+                document.getElementById("Commandes").style.display="none";
+            }
+            function annulerCommande(){
+                //chaque fois on clique sur button suivant on va annuler un commande enregistre sur serveur(pas sur BD)
+                $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'POST',
+                            data: {
+                                action: 'annulerCommande',
+                            },
+                            dataType: 'json'
+                        })
+                });
+            }
+            function retour2(){
+                document.getElementById("Validation").style.display="none";
+                document.getElementById("Commandes").style.display="block";
+            }
+            function suivant2(){
+                $("#table_panier_validation tr").remove();
+                chooseRow=9999;
+                var totalAPayer = parseInt(document.getElementById("sum").innerHTML);
+                //console.log(totalAPayer);
+                if (totalAPayer>0){
+                    document.getElementById("Commandes").style.display="none";
+                    document.getElementById("Validation").style.display="block";
+                    var my_panier_validation = document.getElementById("table_panier_validation");
+                    /*var newTrTH = document.createElement("tr");
+                    var newTH1 = document.createElement("th");
+                    var textTH1 = document.createTextNode("Nom");
+                    var newTH2 = document.createElement("th");
+                    var textTH2 = document.createTextNode("Quantite");
+                    var newTH3 = document.createElement("th");
+                    var textTH3 = document.createTextNode("Prix");
+                    newTrTH.appendChild(newTH1);
+                    newTrTH.appendChild(newTH2);
+                    newTrTH.appendChild(newTH3);
+                    my_panier_validation.appendChild(newTrTH);*/
+                    var my_panier = document.getElementById("tab_panier");
+                    var trs = my_panier.getElementsByTagName("tr");
+                    var rows = my_panier.rows.length;
+                    for(var i=1; i<rows; i++){
+                        //console.log('dans boucle');
+                        var newTR     = document.createElement("tr");
+                        for(var j=0; j<3; j++){
+                            var newTD = my_panier.rows[i].cells[j].cloneNode(true);
+                            newTR.appendChild(newTD); 
+                        }
+                        my_panier_validation.appendChild(newTR);
+                    }
+                    $("#table_panier_validation img").remove();
+                } else {
+                    alert("Votre panier est vide");
+                }
+            }
+            function valider(){
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'validerCommande'
+                        },
+                        dataType: 'json'
+                    });
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <!--header-->
+        <header>
+            <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span> 
+            <div ><p>Restaurants</p></div>
+            <div style="cursor:pointer" id="status" onclick="suivant()"><p>Commande</p></div>
+            <div style="cursor:pointer" id="status"><p>Validation</p></div>
+            <input type="submit" id="connection" value="v" class="statusConn"/>
+            <script>
+                var get = window.location.search.substring(1);
+                if(get.length > 1)
+                {
+                    var userName = get.substring(get.indexOf("=")+1);
+                    //console.log(userName);
+                    document.getElementById("connection").value = userName;  
+                }
+            </script>
+        </header>
+        
+        <!--interface Restaurants-->
+        <div id="Restaurants">
+            <h1 align="center">Choix du restaurant</h1>
+            <h2>Veuillez selectionner un restaurant</h2>
+            <div>
+                <form>
+                    <input type="text" id='searchR' placeholder="Rechercher" onkeyup="searchRestaurant()">
+                </form>
+            </div>
+            <div id='listeRestaurants'>
+                <span>chargement en cours...</span>
+            </div>
+            <div id='DetailsRestaurant'>
+                <span>rien choisi</span>
+            </div>
+            
+            <script>
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'getRestaurants',
+                            nomRestaurant: $("#searchRestaurant").val()
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var restaurants = data.restoos;
+                        var contenuHtml = '<table> <th>Nom</th><th>Adresse</th>';
+                        var i; 
+                        for (i = 0; i < restaurants.length; i++) {
+                            //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+                            contenuHtml += '<tr id="tr_restaurant" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td id="nomResto"> ' 
+                                    + restaurants[i].denomination + '<div id="idResto" style="display:none">'
+                                    + restaurants[i].id + '</div></td><td>'
+                                    + restaurants[i].adresse + '</td></tr> ';
+                        }
+                        contenuHtml += '</table>';
+                        $('#listeRestaurants').html(contenuHtml);
+                    })
+                    .fail(function() {
+                        $('#listeRestaurants').html('ERREUR de chargement');
+                    })
+                    .always(function() {
+                        //
+                    });
+                });
+            </script>
+            
+            <button type="button" onclick="suivant1();creerCommande();">Suivant</button>
+            <!-- footer -->      
+        </div> 
+        
+        <!--interface Commandes-->
+        <div id="Commandes" style="display: none;">
+            <h1 align="center">Choix des produits</h1>
+            <h2>Veuillez ajouter des produits à votre panier</h2>
+            <div>
+                <form>
+                    <input type="text" id='searchP' placeholder="Rechercher" onkeyup="searchProduit()">
+                </form>
+            </div>
+            <div id='listeProduits'>
+                <span>chargement en cours...</span>
+            </div>
+            <div id='DetailsProduits'>
+                <span>rien choisi</span>
+            </div>
+            <div id='choisir'>
+                Quantite: <input type="number" id='quantite' oninput="calculer()"><br/>
+                <script>
+                    $('input[type=number]').keypress(function(e) {
+                        if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+                            return false;
+                        }
+                    });
+                </script>
+                <div>
+                    Prix: <span id='total'>a calculer</span><br/>
+                </div>
+                <button type="button" onclick="ajouter()">Ajouter au panier</button>
+            </div>
+            <div id='div_panier'>
+                <h3>Votre panier actuel: </h3>
+                <table id='tab_panier'>
+                    <th>Nom</th><th>Quantite</th><th>Prix</th>
+                </table>
+                <div>
+                    Total a payer: <span id='sum'>0</span><br/>
+                </div>
+            </div>
+            <button type="button" onclick="retour1();annulerCommande();">Retour</button>
+            <button type="button" onclick="suivant2()">Suivant</button>
+        </div> 
+        
+        <!--interface Validation-->
+        <div id="Validation" style="display: none;">
+            <h1 align="center">Validation de la commande</h1>
+            <h2>Veuillez valider votre panier</h2>
+            <div id='div_panier_validation'>
+                <table id='table_message_validation'>
+                    <tr>
+                        <td>
+                            Restaurants:
+                            <p id='p_adresseRestaurant'>TODO</p>
+                        </td>
+                        <td>
+                            Adresse de livraison:
+                            <p id='p_adresseLivraison:'>TODO</p>
+                        </td>
+                    </tr>
+                </table>
+                <h3>Votre panier actuel: </h3>
+                <table id='table_panier_validation'>
+                    <th>Nom</th><th>Quantite</th><th>Prix</th>
+                </table>
+                <div>
+                    Total a payer: <span id='sum_validation'>0</span><br/>
+                </div>
+                <button type="button" onclick="retour2()">Retour</button>
+                <button type="button" onclick="valider()">Valider</button>
+            </div>
+        </div>
+        <footer>
+            <span><a href='conditions.html' target="_blank">Conditions d'utilisation</a></span>
+            <span><a href='politique.html' target="_blank">Politique de confidentialité</a></span>
+            <span><a href='mentions.html' target="_blank">Mentions légales</a></span>
+        </footer>  
+    </body>
+</html>
