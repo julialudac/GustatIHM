@@ -72,10 +72,6 @@ public class ConnectionNonClientAction extends Action{
                 System.out.println(l);
                 PrintWriter out = null; 
                 try {
-                    out = reponse.getWriter();
-                    reponse.setContentType("text/html;charset=UTF-8");
-                    out.println(mdpl); // mais ça affiche sur fond blanc et la suite du code n'est pas "lue"
-                    out.close();
                     reponse.sendRedirect("itfLivreur.html");
                 } catch (IOException ex) {
                     Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,15 +6,10 @@
 package com.mycompany.gustatihm;
 
 import Actions.*;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.insa.gustatif.dao.JpaUtil;
-import com.insa.gustatif.metier.modele.Restaurant;
-import com.insa.gustatif.metier.service.ServiceMetier;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ActionServlet", urlPatterns = {"/ActionServlet"})
 public class ActionServlet extends HttpServlet {
 
+    public static Set<String> currentUserList = new HashSet<>();
+    final static int CHARGE_MAX_LIMIT = 8000;
     @Override
     public void init() throws ServletException {
         System.out.println("init : fabrique jpaUtil");
@@ -46,39 +43,57 @@ public class ActionServlet extends HttpServlet {
         String todo = request.getParameter("action");
         System.out.println("Todo = "+todo);
         Action action;
-        
-        
-       switch(todo){
-           case "getRestaurants":
-               action = new GetRestaurantsAction();
-               action.execute(request,reponse);
-               break;
-           case "detailRestaurant":
-               action = new DetailRestaurantsAction();
-               action.execute(request,reponse);
-               break;
-           case "Se connecter":
-               action = new ConnectionAction();
-               action.execute(request,reponse);
-               break;
-           case "s'enregistrer":
-               action = new InscriptionAction();
-               action.execute(request,reponse);
-               break;   
-           case "getProduits":
-               action = new GetProduitsAction();
-               action.execute(request,reponse);
-               break; 
-           case "Connexion":
-               action = new ConnectionNonClientAction();
-               action.execute(request,reponse);
-               break;     
-           case "getLivreurData":
-               
-               break;
-       }
-       
-       
+        //HttpSession session = request.getSession(false);
+        switch(todo){
+            case "getRestaurants":
+                action = new GetRestaurantsAction();
+                action.execute(request,reponse);
+                break;
+            case "detailRestaurant":
+                action = new DetailRestaurantsAction();
+                action.execute(request,reponse);
+                break;
+            case "Se connecter":
+                action = new ConnectionAction();
+                action.execute(request,reponse);
+                break;
+            case "s'enregistrer":
+                action = new InscriptionAction();
+                action.execute(request,reponse);
+                break;   
+            case "getProduits":
+                action = new GetProduitsAction();
+                action.execute(request,reponse);
+                break; 
+            case "detailProduits":
+                action = new DetailProduitAction();
+                action.execute(request,reponse);
+                break;     
+            case "creerCommande":
+                System.out.println("dans case creerCommande");
+                action = new CreerCommandeAction();
+                action.execute(request,reponse);
+                break; 
+            case "annulerCommande":
+                System.out.println("dans case annulerCommande");
+                action = new AnnulerCommandeAction();
+                action.execute(request,reponse);
+                break; 
+            case "modifierCommande":
+                System.out.println("dans case modifierCommande");
+                action = new ModifierCommandeAction();
+                action.execute(request,reponse);
+                break; 
+            case "validerCommande":
+                System.out.println("dans case validerCommande");
+                action = new ValiderCommandeAction();
+                action.execute(request,reponse);
+                break;
+            case "Connexion" :
+                action = new ConnectionNonClientAction();
+                action.execute(request,reponse);
+                break;
+        }
     }
 
     //HttpSession session = request.getSession(true);

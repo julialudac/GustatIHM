@@ -24,8 +24,9 @@ public class DetailRestaurantsAction extends Action{
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
         // récupérer l'instance concerné 
+        System.out.println("Je suis dans action DetailRestaurantsAction");
         long id = parseLong((request.getParameter("idRestaurant")));
-        System.out.println(id);
+        //System.out.println(id);
         Restaurant restaurant = ServiceMetier.findAllRestaurants().get((int)id-1);
         //System.out.println(restaurant);
         // convertir en JSON
