@@ -67,7 +67,7 @@ public class ConnectionNonClientAction extends Action{
             // si livreur trouvé, direction itf livreur
             if (l!=null){
                 // enregistrer l'id pour la session
-                session.setAttribute("id",mdpl);
+                session.setAttribute("livreur",l);
                 System.out.println("Livreur trouvé");
                 System.out.println(l);
                 PrintWriter out = null; 

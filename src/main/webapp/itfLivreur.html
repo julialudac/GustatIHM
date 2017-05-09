@@ -11,13 +11,54 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+        <script>
+            function valider(){
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'cloturerCommande'
+                        },
+                        dataType: 'json'
+                    });
+                });
+            }
+        </script>
     </head>
     <body>
         <script>
             $(function(){
-                /*$.done(function(data) {
-                    console.log(data);
-                });*/
+                $.ajax({
+                    url: './ActionServlet',
+                    type: 'POST',
+                    data: {
+                        action: 'getCommande'
+                    },
+                    dataType: 'json'
+                })
+                .done(function(data) {
+                    var commande = data.commande;
+                    var contenuHtml = '<table><thead><th>Nom</th><th>Quantite</th><th>Prix<th></thead><tbody>';
+                        var i; 
+                        for (i = 0; i < commande.length; i++) {
+                            //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+                            contenuHtml += '<tr><td> ' 
+                                    + commande[i].nom + '</td><td>'
+                                    + commande[i].quantite + '</td><td>'
+                                    + commande[i].prix + '</td></tr> ';
+                        }
+                        contenuHtml += '</tbody></table>';
+                        $('#commandeEnC').html(contenuHtml);
+                        $('#p_Restaurant').html(data.restaurant.adresseRestaurant);
+                        $('#p_Client').html(data.client.adresseClient);
+                })
+                .fail(function() {
+                    $('#commandeEnC').html('ERREUR de chargement');
+                })
+                .always(function() {
+                    //
+                });
             });
         </script>
         
@@ -41,6 +82,23 @@ and open the template in the editor.
                 </tbody>
             </table>
             -->
+        </div>
+        <div id="detailCommande">
+            <section>
+                <h2>Restaurant</h2>
+                <p id="p_Restaurant">
+                    Chargement en cours...
+                </p>
+            </section>
+            <section>
+                <h2>Client</h2>
+                <p id="p_Client">
+                    Chargement en cours...
+                </p>
+            </section>
+        </div>
+        <div>
+            <button type="button" onclick="valider()">Valider la commande</button>
         </div>
         <footer>
             <span><a href='conditions.html' target="_blank">Conditions d'utilisation</a></span>

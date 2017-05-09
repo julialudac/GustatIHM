@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -27,9 +28,13 @@ public class ValiderCommandeAction extends Action{
         // Recupere les datas de commande
         System.out.println("Je suis dans action ValiderCommandeAction");
         ConnectionSession connectionSession = ConnectionSession.INSTANCE;
+         HttpSession session = request.getSession(true);
         Client client =  connectionSession.getUser(request.getSession().getId());
-        Commande commande = connectionSession.getCommandeByClient(client.getId());
+        //Commande commande = connectionSession.getCommandeByClient(client.getId());
+        Commande commande = (Commande) session.getAttribute("commande");
+        System.out.println(commande);
         ServiceMetier.traiterCommande(commande);
+        session.setAttribute("commande", commande);
         connectionSession.enregistrerCommande(request.getSession().getId(),commande.getNumCommande());
     }
 }

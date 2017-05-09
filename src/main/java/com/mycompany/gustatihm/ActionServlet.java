@@ -101,6 +101,14 @@ public class ActionServlet extends HttpServlet {
                 action = new GetRestaurantAdresseAction();
                 action.execute(request, reponse);
                 break;
+            case "getCommande":
+                action = new GetCommandeAction();
+                action.execute(request, reponse);
+                break;
+            case "cloturerCommande":
+                action = new CloturerCommandeAction();
+                action.execute(request, reponse);
+                break;
         }
     }
 

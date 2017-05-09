@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -25,6 +26,7 @@ public class CreerCommandeAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
         System.out.println("Je suis dans function CreerCommande");
         ConnectionSession connectionSession = ConnectionSession.INSTANCE;
+        HttpSession session = request.getSession(true);
         
         Client client = (Client) request.getSession().getAttribute("client");
         long idRestaurant = parseLong((request.getParameter("idRestaurant")));
@@ -38,7 +40,8 @@ public class CreerCommandeAction extends Action{
         Commande commande = new Commande();
         commande.setClient(client);
         commande.setRestaurant(restaurant);
-        commande.setNumCommande((long)connectionSession.getNombreDeCommandeATraiter());
+        commande.setNumCommande((long)(connectionSession.getNombreDeCommandeATraiter()+1));
+        session.setAttribute("commande", commande);
         connectionSession.creerCommande(client.getId(), commande);
     }
 }
