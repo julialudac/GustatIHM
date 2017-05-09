@@ -1,0 +1,48 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 8 mai 2017, 23:37:52
+    Author     : julia
+*/
+
+body{
+    font-family: "calibri";
+}
+
+header, footer, span, input{
+    border-radius : 10px;   
+}
+
+header{
+    background-color: #ffb567;
+    height: 64px;
+}
+
+footer{
+    background-color: brown;
+    height: 30px;
+}
+
+footer a{
+    color : white;
+}
+
+span{
+    display: inline-block;
+}
+
+.centralH{
+    background-color : #ffcaae;
+    width: 500px;
+    height: 30px;
+}
+
+.statusConn{
+    color : white;
+    background-color: brown;
+    width: 200px;
+    height: 30px;
+}

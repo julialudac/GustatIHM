@@ -9,6 +9,7 @@ and open the template in the editor.
         <title>Interface Livreur</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
     </head>
     <body>
@@ -21,10 +22,10 @@ and open the template in the editor.
         </script>
         
         <header>
-            <span id="divLogo"> <img src="logoGustatif.jpg"/> </span>  
+            <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span>  
             <select name="listeDeconn" style="width: 200px;">
                 <option value="v" id="userName">v</option>
-                <option value="deconnexion">Se déconnecter</option>
+                <option value="deconnexion" class="statusConn">Se déconnecter</option>
             </select>
         </header>
         <h1>Votre commande actuelle</h1>

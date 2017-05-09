@@ -11,6 +11,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.steps.js"></script>
+        <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script language="javascript">
             var defaultColor="#ffffff";
             var overColor="yellow";
@@ -294,11 +295,11 @@ and open the template in the editor.
     <body>
         <!--header-->
         <header>
-            <div id="divLogo"> <img src=""/> </div>    
+            <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span> 
             <div ><p>Restaurants</p></div>
             <div style="cursor:pointer" id="status" onclick="suivant()"><p>Commande</p></div>
             <div style="cursor:pointer" id="status"><p>Validation</p></div>
-            <input type="submit" id="connection" value="v"/>
+            <input type="submit" id="connection" value="v" class="statusConn"/>
             <script>
                 var get = window.location.search.substring(1);
                 if(get.length > 1)
