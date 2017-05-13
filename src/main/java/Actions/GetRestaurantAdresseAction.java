@@ -26,8 +26,9 @@ public class GetRestaurantAdresseAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
         System.out.println("Je suis dans action GetRestaurantAdresseAction");
         Client client = (Client) request.getSession().getAttribute("client");
-        ConnectionSession connectionSession = ConnectionSession.INSTANCE;    
-        Commande commande = connectionSession.getCommandeByClient(client.getId());
+        //ConnectionSession connectionSession = ConnectionSession.INSTANCE;    
+        //Commande commande = connectionSession.getCommandeByClient(client.getId());
+        Commande commande = (Commande) request.getSession().getAttribute("commande");
         Restaurant restaurant = commande.getRestaurant();
         
         JsonObject jsonProduit = new JsonObject();

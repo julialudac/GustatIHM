@@ -24,6 +24,7 @@ and open the template in the editor.
                     });
                 });
             }
+            
         </script>
     </head>
     <body>
@@ -54,7 +55,9 @@ and open the template in the editor.
                         $('#p_Client').html(data.client.adresseClient);
                 })
                 .fail(function() {
-                    $('#commandeEnC').html('ERREUR de chargement');
+                    $('#commandeEnC').html('Pas de commande en cours');
+                    $('#p_Restaurant').html("");
+                    $('#p_Client').html("");
                 })
                 .always(function() {
                     //
@@ -98,7 +101,7 @@ and open the template in the editor.
             </section>
         </div>
         <div>
-            <button type="button" onclick="valider()">Valider la commande</button>
+            <button type="button" onclick="valider();location.reload();">Valider la commande</button>
         </div>
         <footer>
             <span><a href='conditions.html' target="_blank">Conditions d'utilisation</a></span>

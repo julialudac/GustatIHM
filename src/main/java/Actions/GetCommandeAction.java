@@ -30,6 +30,7 @@ public class GetCommandeAction extends Action{
         HttpSession session = request.getSession(true);
         Livreur livreur = (Livreur) session.getAttribute("livreur");
         Commande commande = livreur.getCmdeEnCours();
+
         List<ProduitCommande> produits = commande.getProduitCommande();
         
         JsonArray jsonListe = new JsonArray();

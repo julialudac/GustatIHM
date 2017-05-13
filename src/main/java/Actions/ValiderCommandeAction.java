@@ -35,6 +35,6 @@ public class ValiderCommandeAction extends Action{
         System.out.println(commande);
         ServiceMetier.traiterCommande(commande);
         session.setAttribute("commande", commande);
-        connectionSession.enregistrerCommande(request.getSession().getId(),commande.getNumCommande());
+        //connectionSession.enregistrerCommande(request.getSession().getId(),commande.getNumCommande());
     }
 }

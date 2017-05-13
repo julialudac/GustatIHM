@@ -40,8 +40,8 @@ public class CreerCommandeAction extends Action{
         Commande commande = new Commande();
         commande.setClient(client);
         commande.setRestaurant(restaurant);
-        commande.setNumCommande((long)(connectionSession.getNombreDeCommandeATraiter()+1));
+        //commande.setNumCommande(ServiceMetier.);
         session.setAttribute("commande", commande);
-        connectionSession.creerCommande(client.getId(), commande);
+        //connectionSession.creerCommande(client.getId(), commande);
     }
 }

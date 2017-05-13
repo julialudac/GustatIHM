@@ -50,7 +50,7 @@ public class ModifierCommandeAction extends Action{
             ProduitCommande produitCommande = new ProduitCommande(produitFind,qte);
             ServiceMetier.addProduitCommande(commande, produitCommande);
             session.setAttribute("commande", commande);
-            connectionSession.creerCommande(client.getId(), commande);
+            //connectionSession.creerCommande(client.getId(), commande);
         } else {
             System.out.println("Je suis dans cas supprime");
             //Commande commande = connectionSession.getCommandeByClient(client.getId());
@@ -69,7 +69,7 @@ public class ModifierCommandeAction extends Action{
             ProduitCommande produitCommande = new ProduitCommande(produitFind,qte);
             ServiceMetier.removeProduitCommande(commande, produitCommande);
             session.setAttribute("commande", commande);
-            connectionSession.creerCommande(client.getId(), commande);
+            //connectionSession.creerCommande(client.getId(), commande);
             System.out.println("CommandeID: "+commande.getNumCommande());
         }
         
