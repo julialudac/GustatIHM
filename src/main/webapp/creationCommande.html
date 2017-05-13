@@ -169,12 +169,20 @@ and open the template in the editor.
                 });
             }
             function suivant1(){
+                
                 chooseRow=9999;
                 var divDetailsRestaurant = document.getElementById("DetailsRestaurant");
                 var div_l = divDetailsRestaurant.getElementsByTagName("div").length;
                 var id = 0;
                 //console.log(div_l);
                 if (div_l>0){
+                    var trs_restaurants = $('[id=tr_restaurant]');
+                    var i;
+                    for (i=0;i<trs_restaurants.length;i++){
+                        console.log(trs_restaurants[i]);
+                        trs_restaurants[i].style.backgroundColor=defaultColor;
+                    }
+                    
                     id = document.getElementById("idRestaurant").innerHTML;
                     //window.location.href=("choixDesProduits?idRestaurant="+id);
                     document.getElementById("Restaurants").style.display="none";
@@ -467,6 +475,7 @@ and open the template in the editor.
                 retour1();
             }
         </script>
+        
     </head>
     <body>
         <!--header-->
@@ -495,6 +504,14 @@ and open the template in the editor.
                 <form>
                     <input type="text" id='searchR' placeholder="Rechercher" onkeyup="searchRestaurant()">
                 </form>
+                <!--script pour enlever l'action de taper enter dans input -->
+                <script type="text/javascript">  
+                    $('#searchR').keydown(function(event) {
+                        if (event.keyCode == 13) {
+                            return false;
+                        }
+                    });
+                </script> 
             </div>
             <div id='listeRestaurants'>
                 <span>chargement en cours...</span>
@@ -549,6 +566,14 @@ and open the template in the editor.
                 <form>
                     <input type="text" id='searchP' placeholder="Rechercher" onkeyup="searchProduit()">
                 </form>
+                <!--script pour enlever l'action de taper enter dans input -->
+                <script type="text/javascript">  
+                    $('#searchP').keydown(function(event) {
+                        if (event.keyCode == 13) {
+                            return false;
+                        }
+                    });
+                </script>
             </div>
             <div id='listeProduits'>
                 <span>chargement en cours...</span>
