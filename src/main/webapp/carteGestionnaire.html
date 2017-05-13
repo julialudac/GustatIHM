@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Gustat'IF - Carte</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            html, body { height: 100%; margin: 0; padding: 0; }
+            #map { height: 70%; width: 80%; margin:50px}
+        </style>
+        <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+    </head>
+    <body>
+        <h1 style="margin:auto; width:50%; border-bottom : 2px solid grey;" >Gustat'IF - carte</h1>
+        <div id="map"></div>
+        <script type="text/javascript">
+      
+            var map;
+            
+            // Retourne une infoWindow, mais je ne sais pas à quoi sert le remplissage du content 
+            // mis dans cette fonction, vu que plus loin en bas, on s'en sert pas. Je pense que ça servira 
+            // si je décide de m'en servir. 
+            function makeInfoWindow(title) {
+                return new google.maps.InfoWindow({
+                    content: '<div>Information: ' + title + 'chfoufg' + '</div>' // C'est où qu'on voit ce truc ???
+                });
+            }
+
+            // appelé dans .done. Permet de mettre sur la carte un marker, avec une fenêtre d'info associée, avec 
+            // une description associée à la fenêtre d'info.
+            // Une fenpetre d'info est la fenêtre qui s'affiche quand on clique sur le marqueur
+            function attachInfoWindow(marker, infowindow, htmlDescription) {
+                marker.addListener('click', function() {
+
+                    infowindow.setContent(htmlDescription);
+                    infowindow.open(map, this);
+                });
+            }
+
+            // La seule fonction à appeler. Avant de faire une requête AJAX pour récup les restau, il 
+            // y a un truc particulier qui est fait 
+            function initMap() {
+
+                // l'endroit où on démarre, avec le zoom 
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 45.7601424, lng: 4.8961779},
+                    zoom: 13
+                });
+
+                var infowindow = makeInfoWindow(''); // 
+                
+                // C'est surtout ça qui m'intéresse !!! 
+                $.ajax({
+                    url: './ActionServlet',
+                    type: 'POST',
+                    data: {
+                        action: 'getClientsRestoLivreurs'
+                    },
+                    dataType: 'json'
+                })
+                        .done(function(data) {
+                            
+                            // ------------pour les restos-----------------
+                            var restaurants = data.restos;
+                            var i;
+                            for (i = 0; i < restaurants.length; i++) {
+                                
+                                var resto = restaurants[i];
+                                
+                                // un marqueur rouge à afficher sur la carte 
+                                var marker = new google.maps.Marker({
+                                    map: map,
+                                    position: {lat: resto.latitude, lng: resto.longitude},
+                                    title: resto.denomination // la bulle quand on survole
+                                });
+                                
+                                // On pose sur la carte un point rouge avec des choses associées. Correspondant au 
+                                // resto 
+                                attachInfoWindow(
+                                        marker, infowindow,
+                                        '<div><h1>'+resto.denomination + '</h1><p>' + resto.adresse + '</p></div>' 
+                                        );
+                            }
+                            
+                            
+                            // ------------------pour les clients------------------ 
+                            var clients = data.clients;
+                            for (i = 0; i < clients.length; i++) {
+                                
+                                var client = clients[i];
+                                
+                                // un marqueur jaune à afficher sur la carte 
+                                var marker = new google.maps.Marker({
+                                    map: map,
+                                    position: {lat: client.latitude, lng: client.longitude},
+                                    title: client.nomC, // la bulle quand on survole
+                                    icon : {url: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', scaledSize: new google.maps.Size(32, 32)}
+                                });
+                                
+                                // On pose sur la carte un point jaune avec des choses associées. Correspondant au 
+                                // client 
+                                attachInfoWindow(
+                                        marker, infowindow,
+                                        '<div><h1>'+client.nomC+ '</h1><p>' + client.adresse + '</p></div>' 
+                                        );
+                            }
+                            
+                            
+                            // -------------------pour les vélos------------------
+                            var velos = data.velos;
+                            console.log("Il y a " + velos.length + " velos");
+                            for (i = 0; i < velos.length; i++) {
+                                
+                                var velo = velos[i];
+                                console.log(velo.adresse);
+                                
+                                // un marqueur bleu à afficher sur la carte 
+                                var marker = new google.maps.Marker({
+                                    map: map,
+                                    position: {lat: velo.latitude, lng: velo.longitude},
+                                    title: velo.nomC, // la bulle quand on survole
+                                    icon : {url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', scaledSize: new google.maps.Size(32, 32)}
+                                });
+                                
+                                // On pose sur la carte un point bleu avec des choses associées. Correspondant au 
+                                // vélo 
+                                attachInfoWindow(
+                                        marker, infowindow,
+                                        '<div><h1>'+velo.nomC + '</h1><p>' + velo.adresse + '</p></div>' 
+                                        );
+                            }
+                            
+                            
+                            // ------------------pour les drones---------------------
+                            var drones = data.drones;
+                            console.log("Il y a " + drones.length + " drones");
+                            for (i = 0; i < drones.length; i++) {
+                                
+                                var drone = drones[i];
+                                console.log(drone.adresse);
+                                
+                                // un marqueur bleu à afficher sur la carte 
+                                var marker = new google.maps.Marker({
+                                    map: map,
+                                    position: {lat: drone.latitude, lng: drone.longitude},
+                                    title: "Un drone", // la bulle quand on survole
+                                    icon : {url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', scaledSize: new google.maps.Size(32, 32)}
+                                });
+                                
+                                // On pose sur la carte un point bleu avec des choses associées. Correspondant au 
+                                // drone 
+                                attachInfoWindow(
+                                        marker, infowindow,
+                                        '<div><h1>Un drone</h1><p>' + drone.adresse + '</p></div>' 
+                                        );
+                            }
+                            
+
+                        })
+                        .fail(function() {
+                            //
+                            console.log("Dommage pas donnée");
+                        })
+                        .always(function() {
+                            //
+                        });
+            }
+                     
+
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAklw96N9rLd93ubr-F04CN7qi2ryKayAc&callback=initMap">
+            $(function() {
+                initMap();
+                
+            });
+        </script>
+    </body>
+</html>

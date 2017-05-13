@@ -109,6 +109,10 @@ public class ActionServlet extends HttpServlet {
                 action = new CloturerCommandeAction();
                 action.execute(request, reponse);
                 break;
+			case "getClientsRestoLivreurs" :
+                action = new GetActeursAction();
+                action.execute(request, reponse);
+                break;
         }
     }
 
