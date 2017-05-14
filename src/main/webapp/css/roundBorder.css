@@ -65,7 +65,7 @@ input[type="text"], input[type="password"]{
     width: 200px;
 }
 
-input[type="button"], input[type="submit"],input[type="text"]:not(.searchBar),input[type="password"]  {
+input[type="button"], input[type="submit"],input[type="text"]:not(.searchBar),input[type="password"],.valid  {
     position : absolute;
     right : 0%;
 }
@@ -94,14 +94,19 @@ span{
 }
 
 table{
-    border : 1px solid grey;
-    width:40%;
+	width:100%;
+	border : 1px solid grey;
+	border-collapse:collapse;
 }
 
 th{
     background-color:gray;
+	
 }
 
+th,td{
+	border : 1px solid grey;
+}
 
 .aTrait{
     border-bottom : 2px solid grey;
@@ -121,10 +126,30 @@ th{
     justify-content: space-between;
 }
 
+.gdCont{
+	display: flex;
+    justify-content: space-around;
+}
+
+.morceau{
+	display: inline-block;
+	border : 1px solid grey;
+	width:40%;
+	height:350px;
+	margin : 10px;
+	overflow: auto;
+}
+
+.detail{
+	
+}
+
+/* la description à l'int d'un détail  */
 .moreInfo{
     border : 1px solid grey;
-    display:inline-block;
-    width:40%;
+    height:50%;
+	height:100px;
+	overflow: auto;
 }
 
 .searchBar{
@@ -138,6 +163,6 @@ th{
     height: 30px;
 }
 
-#cp{
-    position : relative;
+#choisir{
+    
 }
