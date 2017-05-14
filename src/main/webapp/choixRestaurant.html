@@ -418,7 +418,7 @@ and open the template in the editor.
             <div ><p>Restaurants</p></div>
             <div style="cursor:pointer" id="status" onclick="suivant()"><p>Commande</p></div>
             <div style="cursor:pointer" id="status"><p>Validation</p></div>
-            <input type="submit" id="connection" value="v" class="statusConn"/>
+            <input style="background-color: brown;"type="submit" id="connection" value="v" class="statusConn"/>
             <script>
                 var get = window.location.search.substring(1);
                 if(get.length > 1)
@@ -442,7 +442,7 @@ and open the template in the editor.
             <div id='listeRestaurants'>
                 <span>chargement en cours...</span>
             </div>
-            <div id='DetailsRestaurant'>
+            <div id='DetailsRestaurant' class="moreInfo">
                 <span>rien choisi</span>
             </div>
             
@@ -480,7 +480,7 @@ and open the template in the editor.
                 });
             </script>
             
-            <button type="button" onclick="suivant1();creerCommande();">Suivant</button>
+            <button type="button" onclick="suivant1();creerCommande();" class="valid">Suivant</button>
             <!-- footer -->      
         </div> 
         
@@ -496,10 +496,10 @@ and open the template in the editor.
             <div id='listeProduits'>
                 <span>chargement en cours...</span>
             </div>
-            <div id='DetailsProduits'>
+            <div id='DetailsProduits' class="moreInfo">
                 <span>rien choisi</span>
             </div>
-            <div id='choisir'>
+            <div id='choisir' class="moreInfo">
                 Quantite: <input type="number" id='quantite' oninput="calculer()"><br/>
                 <script>
                     $('input[type=number]').keypress(function(e) {
@@ -523,7 +523,7 @@ and open the template in the editor.
                 </div>
             </div>
             <button type="button" onclick="retour1();annulerCommande();">Retour</button>
-            <button type="button" onclick="suivant2()">Suivant</button>
+            <button type="button" onclick="suivant2()" class="valid">Suivant</button>
         </div> 
         
         <!--interface Validation-->

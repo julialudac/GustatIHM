@@ -12,6 +12,14 @@ body{
     font-family: "calibri";
 }
 
+div{
+    
+}
+
+h1{
+    text-align : center;
+}
+
 header, footer, span, input{
     border-radius : 10px;   
 }
@@ -19,30 +27,102 @@ header, footer, span, input{
 header{
     background-color: #ffb567;
     height: 64px;
+    border: solid 2px gray;
+    margin:10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+header span{
+    text-align:center;
 }
 
 footer{
     background-color: brown;
     height: 30px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-around;
 }
 
 footer a{
     color : white;
+    text-decoration: none;
+}
+
+form{
+    position :relative;
+    width:60%;
+    margin-bottom:40px;
+}
+
+form input{ 
+    display:inline-block;
+}
+
+input[type="text"], input[type="password"]{
+    width: 200px;
+}
+
+input[type="button"], input[type="submit"],input[type="text"],input[type="password"]  {
+    position : absolute;
+    right : 0%;
+}
+
+input[type="reset"]{
+    position : absolute;
+    right : 100px;
+}
+
+input[type="submit"], .valid{
+    background-color : #586de8;
+    color : white;
+}
+
+aside{
+    position : relative;
+    margin:10px;
 }
 
 span{
     display: inline-block;
 }
 
-input[type="submit"]{
-    background-color : #586de8;
-    color : white;
+table{
+    border : 1px solid grey;
+    width:40%;
+}
+
+th{
+    background-color:gray;
+}
+
+
+.aTrait{
+    border-bottom : 2px solid grey;
+}
+
+.cancel{
+    background-color: red;
+    color:white;
 }
 
 .centralH{
     background-color : #ffcaae;
     width: 500px;
     height: 30px;
+    border: solid 2px gray;
+}
+
+.moreInfo{
+    border : 1px solid grey;
+    display:inline-block;
+    width:40%;
+}
+
+.searchBar{
+    background-image: url('search.png');
 }
 
 .statusConn{
@@ -50,4 +130,8 @@ input[type="submit"]{
     background-color: brown;
     width: 200px;
     height: 30px;
+}
+
+#cp{
+    position : relative;
 }

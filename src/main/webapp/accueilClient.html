@@ -136,22 +136,23 @@ and open the template in the editor.
         <div>
             <!-- Authentification -->
             <h1 align="center">Bienvenue sur Gustat'IF ! Vous n'êtes pas connecté.</h1>
-            <h2>Connexion</h2>
+            <h2 class="aTrait">Connexion</h2>
             <form action="./ActionServlet" method="POST" id="f1">
-                <label for="email">E-mail utilisateur :</label> <input type="text" id="email" name="email" placeholder="<mail>"/> <br/>
-                <label for="mdp">Mot de passe : </label> <input type="password" id="mdp" name="mdp" placeholder="<mdp>"/> </br>
-                <input type="submit" value="Se connecter" name='action' />
+                <aside><label for="email">E-mail utilisateur :</label> <input type="text" id="email" name="email" placeholder="<mail>"/> </aside>
+                <aside><label for="mdp">Mot de passe : </label> <input type="password" id="mdp" name="mdp" placeholder="<mdp>"/> </aside>
+                <aside><input type="submit" value="Se connecter" name='action' /> </aside>
             </form>
             <!-- Inscription -->
-            <h2>Pas de compte ? Inscrivez-vous gratuitement ! </h2>
+            <h2 class="aTrait">Pas de compte ? Inscrivez-vous gratuitement ! </h2>
             <form action="./ActionServlet" method="POST" id="f2">
-                <label for="prenom">Prénom : </label> <input type="text" id="prenom" name="prenom" placeholder="<pnom>"/> <br/>
-                <label for="nom">Nom : </label> <input type="text" id="nom" name="nom" placeholder="<nom>"/> </br>
-                <label for="adrMail">Adresse mail : </label> <input type="text" id="adrMail" name="adrMail" placeholder="<mail>"/> <br/>
-                <label for="adrLivraison">Adresse de livraison : </label> <input type="text" id="adrLivraison" name="adrLivraison" placeholder="<adr>"/> </br>
-                <label for="cp">Code postal : </label> <input type="text" id="cp" name="cp" placeholder="<cp>"/>
-                <label for="ville">Ville : </label> <input type="text" id="ville" name="ville" placeholder="<ville>"/></br>
-                <input type="reset" value="annuler" class="cancel"/><input type="submit" value="s'enregistrer" name='action'/>
+                <aside><label for="prenom">Prénom : </label> <input type="text" id="prenom" name="prenom" placeholder="<pnom>"/> </aside>
+                <aside> <label for="nom">Nom : </label> <input type="text" id="nom" name="nom" placeholder="<nom>"/> </aside>
+                <aside><label for="adrMail">Adresse mail : </label> <input type="text" id="adrMail" name="adrMail" placeholder="<mail>"/> </aside>
+                <aside> <label for="adrLivraison">Adresse de livraison : </label> <input type="text" id="adrLivraison" name="adrLivraison" placeholder="<adr>"/> </aside>
+                <aside><label for="cp">Code postal : </label> <input type="text" id="cp" name="cp" placeholder="<cp>"/> 
+                       <label for="ville">Ville : </label> <input type="text" id="ville" name="ville" placeholder="<ville>"/>
+                </aside>
+                <aside> <input type="reset" value="annuler" class="cancel"/><input type="submit" value="s'enregistrer" name='action'/> </aside>
             </form>
             <!-- footer -->
             <footer>

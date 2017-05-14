@@ -13,15 +13,21 @@
     <body>
         <div id="map"></div>
         <script type="text/javascript">
-
+      
             var map;
-
+            
+            // Retourne une infoWindow, mais je ne sais pas à quoi sert le remplissage du content 
+            // mis dans cette fonction, vu que plus loin en bas, on s'en sert pas. Je pense que ça servira 
+            // si je décide de m'en servir. 
             function makeInfoWindow(title) {
                 return new google.maps.InfoWindow({
-                    content: '<div>Information: ' + title + '</div>'
+                    content: '<div>Information: ' + title + 'chfoufg' + '</div>' // C'est où qu'on voit ce truc ???
                 });
             }
 
+            // appelé dans .done. Permet de mettre sur la carte un marker, avec une fenêtre d'info associée, avec 
+            // une description associée à la fenêtre d'info.
+            // Une fenpetre d'info est la fenêtre qui s'affiche quand on clique sur le marqueur
             function attachInfoWindow(marker, infowindow, htmlDescription) {
                 marker.addListener('click', function() {
 
@@ -30,15 +36,21 @@
                 });
             }
 
+            // La seule fonction à appeler. Avant de faire une requête AJAX pour récup les restau, il 
+            // y a un truc particulier qui est fait 
             function initMap() {
 
+                // l'endroit où on démarre, avec le zoom 
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: {lat: 45.7601424, lng: 4.8961779},
                     zoom: 13
                 });
 
-                var infowindow = makeInfoWindow('');
+                var infowindow = makeInfoWindow(''); // 
 
+                // le marker sur la carte pour le dept IF.
+                // Il faut associer un listener au markeur pour qu'il se passe qc 
+                // quand on clique desus 
                 var marker = new google.maps.Marker({
                     map: map,
                     position: {lat: 45.782122, lng: 4.872735},
@@ -64,31 +76,37 @@
                     infowindow.setContent('<div>Information: ' + marker2.title + '</div>');
                     infowindow.open(map, marker2);
                 });
-
+                
+                // C'est surtout ça qui m'intéresse !!! 
                 $.ajax({
                     url: './ActionServlet',
                     type: 'POST',
                     data: {
-                        action: 'carteRestaurants'
+                        action: 'getRestaurants'
                     },
                     dataType: 'json'
                 })
                         .done(function(data) {
-
-                            var restaurants = data.restaurants;
+                            var restaurants = data.restoos;
                             var i;
+                            console.log(restaurants.length);
                             for (i = 0; i < restaurants.length; i++) {
-							
-								console.log(resto.id);
-
+                                
                                 var resto = restaurants[i];
-
+                                console.log(resto.id);
+                                
+                                // un marqueur rouge à afficher sur la carte 
                                 var marker = new google.maps.Marker({
                                     map: map,
                                     position: {lat: resto.latitude, lng: resto.longitude},
-                                    title: resto.denomination
+                                    title: resto.denomination,
+                                     // C'est une façon que j'ai trouvé pour changer la couleur de la marque Google maps
+                                    icon : {url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', scaledSize: new google.maps.Size(32, 32)}
                                 });
-
+                                
+                                
+                                // On pose sur la carte un point rouge avec des choses associées. Correspondant au 
+                                // resto 
                                 attachInfoWindow(
                                         marker, infowindow,
                                         '<div><strong><a href="./restaurant.html?' + resto.id + '">' + resto.denomination + '</a></strong><br/>' + resto.adresse + '<br/>' + resto.description + '</div>'
@@ -98,14 +116,20 @@
                         })
                         .fail(function() {
                             //
+                            console.log("Dommage pas donnée");
                         })
                         .always(function() {
                             //
                         });
             }
+                     
 
         </script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAklw96N9rLd93ubr-F04CN7qi2ryKayAc&callback=initMap">
+            $(function() {
+                initMap();
+                
+            });
         </script>
     </body>
 </html>
