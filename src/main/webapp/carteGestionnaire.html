@@ -12,8 +12,32 @@
         <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
     </head>
     <body>
+        <!--------header----------->
+        <header>
+            <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span> 
+            <span class='centralH'>
+                <span style="cursor:pointer" id="droneTab">Drones</span>
+                <span> > </span>
+                <span style="cursor:pointer" id="veloTab">Vélo</span>
+                <span> > </span>
+                <span style="background-color:brown;" id="carteTab">Carte</span>
+            </span>
+            <select style="background-color: brown; width: 200px;" name="listeDeconn" class="statusConn">
+                <option value="username" id="connection">ADMIN!</option>
+                <option value="deconnexion">Se déconnecter</option>
+            </select>
+        </header>
+        
         <h1 style="margin:auto; width:50%; border-bottom : 2px solid grey;" >Gustat'IF - carte</h1>
         <div id="map"></div>
+        
+        <footer>
+            <span><a href='conditions.html' target="_blank">Conditions d'utilisation</a></span>
+            <span><a href='politique.html' target="_blank">Politique de confidentialité</a></span>
+            <span><a href='mentions.html' target="_blank">Mentions légales</a></span>
+        </footer> 
+        
+        
         <script type="text/javascript">
       
             var map;
@@ -163,7 +187,21 @@
                             console.log("Dommage pas donnée");
                         })
                         .always(function() {
-                            //
+                            // code pour se déco 
+                            var listeDer = document.getElementsByTagName("select")[0];
+                            listeDer.onchange = function(){
+                                if(listeDer.value == "deconnexion"){
+                                    window.location.href = "accueilNonClient.html";
+                                }
+                            };
+
+                            // direction vers les autres tabs
+                            $("#veloTab").click(function(){
+                                window.location.href = "itfAdminVelo.html";
+                            });
+                            $("#droneTab").click(function(){
+                                window.location.href = "itfAdmin.html";
+                            });
                         });
             }
                      
@@ -172,7 +210,6 @@
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAklw96N9rLd93ubr-F04CN7qi2ryKayAc&callback=initMap">
             $(function() {
                 initMap();
-                
             });
         </script>
     </body>

@@ -68,8 +68,13 @@ public class GetActeursAction extends Action{
             int apresVeloIndex = velo.toString().indexOf("Vélo : ") + 7;
             String nomComplet = velo.toString().substring(apresVeloIndex,indexTiret);
             System.out.println("nom complet velo : "+nomComplet);
-            jsonVelo.addProperty("adresse",velo.getAdresse());
             jsonVelo.addProperty("nomC", nomComplet);
+            String estDisp = "NON";
+            if(velo.getCmdeEnCours()==null){
+                estDisp = "OUI";
+            }
+            jsonVelo.addProperty("dispo",estDisp);
+            jsonVelo.addProperty("poidsMax", velo.getChargeMaxi());
             jsonVelo.addProperty("latitude", velo.getLatitude());
             jsonVelo.addProperty("longitude", velo.getLongitude());
             jsonListe.add(jsonVelo);
@@ -82,9 +87,20 @@ public class GetActeursAction extends Action{
         List<Livreur> listeDrones = ServiceMetier.findAllDrones();
         for (Livreur drone : listeDrones) {
             JsonObject jsonDrone = new JsonObject();
+            jsonDrone.addProperty("code",drone.getIdLivreur());
+            String estDisp = "NON";
+            if(drone.getCmdeEnCours()==null){
+                estDisp = "OUI";
+            }
+            jsonDrone.addProperty("dispo",estDisp);
             jsonDrone.addProperty("adresse",drone.getAdresse());
             jsonDrone.addProperty("latitude", drone.getLatitude());
             jsonDrone.addProperty("longitude", drone.getLongitude());
+            int indexVit = drone.toString().indexOf("Vitesse moyenne : ");
+            String vitMoyenne = drone.toString().substring(indexVit+18);
+            jsonDrone.addProperty("vit", vitMoyenne);
+            jsonDrone.addProperty("poidsMax", drone.getChargeMaxi());
+            
             jsonListe.add(jsonDrone);
         }
         jsonContainer.add("drones", jsonListe);

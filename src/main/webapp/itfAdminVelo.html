@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Interface Gestionnaire - Vélos</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+        <script src="js/jquery.steps.js"></script>
+        <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <!--------header----------->
+        <header>
+            <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span> 
+            <span class='centralH'>
+                <span style="cursor:pointer" id="droneTab">Drones</span>
+                <span> > </span>
+                <span style="background-color:brown;" id="veloTab">Vélo</span>
+                <span> > </span>
+                <span style="cursor:pointer" id="carteTab">Carte</span>
+            </span>
+            <select style="background-color: brown; width: 200px;" name="listeDeconn" class="statusConn">
+                <option value="username" id="connection">ADMIN!</option>
+                <option value="deconnexion">Se déconnecter</option>
+            </select>
+        </header>
+        
+        <h1>Interface Gestionnaire</h1>
+        <h2>Liste des vélos</h2>
+        
+        <!-- Tableau vélos -->
+        <div>
+            <table id="tabVelos">
+            </table>  
+        </div>
+        <!-- Détail vélo -->
+        <div>
+            <div id="descr">Pas de vélo sélectionné</div>
+            <input type="button" value="Détails Commande"/>
+        </div>
+        
+        
+        <script>
+            $(function(){
+                
+                // requête ajax pour récupérer les vélos 
+                $.ajax({
+                    url: './ActionServlet',
+                    type: 'POST',
+                    data: {
+                        action: 'getClientsRestoLivreurs',
+                    },
+                    dataType: 'json'
+                })
+                .done(function(data) {
+                    var velos = data.velos;
+                    var contenuHtml = '<table><thead><th>Nom prénom</th><th>Adresse</th><th>Dispo</th><th>Poids max</th></thead><tbody>';
+                    var i; 
+                    for (i = 0; i < velos.length; i++) {
+                        contenuHtml += '<tr id="tr_drone" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)">\n\
+                        <td id="idDrone"> ' + velos[i].nomC + '</td>\n\
+                        <td>'+ velos[i].adresse + '</td>'
+                        + '<td>'+velos[i].dispo +'</td>'
+                        + '<td>'+velos[i].poidsMax+'</td></tr>';
+                    }
+                    contenuHtml += '</tbody></table>';
+                    $('#tabVelos').html(contenuHtml);
+                })
+                .fail(function() {
+                    $('#tabVelos').html('ERREUR de chargement');
+                })
+                .always(function() {
+                    //
+                });
+                
+                // code pour se déco 
+                var listeDer = document.getElementsByTagName("select")[0];
+                listeDer.onchange = function(){
+                    if(listeDer.value == "deconnexion"){
+                        window.location.href = "accueilNonClient.html";
+                    }
+                };
+                
+                // direction vers les autres tabs
+                $("#droneTab").click(function(){
+                    window.location.href = "itfAdmin.html";
+                });
+                $("#carteTab").click(function(){
+                    window.location.href = "carteGestionnaire.html";
+                });
+
+            });
+                
+                
+        </script>
+        
+    </body>
+</html>
