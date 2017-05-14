@@ -13,22 +13,56 @@ and open the template in the editor.
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <div id="info" class="alert alert-danger" style="color:red;">
-        </div>
         
         <script>
     
             // Toujours englober le code JQuery dans cette fonction !!!
             $(function() {
-             
+				
                 // ------------------ permet de contrôler la direction : on reste sur la page ou pas---------------
                 $('#info').hide();
-                $('#f').submit(function (evt) {
+                $('#Connexion').click(function () {
+					
+				
+		// Cas où infos pas rentrées => on reste sur la page 
                     if($('#mdp').val()==""){
                         $('#info').show();
                         $('#info').html("Veuillez entrer votre mot de passe.");
-                        evt.preventDefault();
                     }
+					// Cas où c'est l'admin alors direction itf admin 
+					else if($('#mdp').val()=="0") {
+						window.location.href = "itfAdmin.html";
+					}
+					// Cas où on veut livreur : soit on se redirige vers la meme page, soit on avancera
+                    else{
+                        $.ajax({
+                        url: './ActionServlet',
+                        type: 'POST',
+                        data: {
+                            action: 'Connexion',
+                            mdp : $("#mdp").val()
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var livreur = data ;
+			// Si pas de vélo trouvé, on se redirige vers la page, qui affichera une pop-up d'erreur
+                        if(livreur.plein==0){
+                                window.location.href = "accueilNonClient.html?info=1";
+                        }
+                        // Sinon , direction vers la page de consulation de la commande en cours 
+                        else{
+                                window.location.href = "itfLivreur.html";
+                        }
+                    })
+                    .fail(function() {
+                        alert("Impossible d'accéder à la base de données. Veuillez réessayer plus tard.")
+                    })
+                    .always(function() {
+                        //
+                    });
+                    }
+					
                 });
                 
                 // ------------------ permet de voir s'il y a une pop-up à afficher et laquelle ------------------
@@ -49,15 +83,17 @@ and open the template in the editor.
             <span class="centralH">Gustat'IF : Livraison à domicile des clients</span>
             <span class="statusConn">Non connecté</span>
         </header>
+        <div id="info" class="alert alert-danger" style="color:red;">
+        </div>
         <!-- div principal -->
         <div>
             <!-- Authentification -->
             <h1 align="center">Bienvenue sur Gustat'IF ! Vous n'êtes pas connecté.</h1>
             <h2 class="aTrait">Connexion</h2>
-            <form action="./ActionServlet" method="POST" id="f">
+            <form id="f"> <!-- En fait, pas de JSP => ces attributs ne servent à rien !!! -->
                 <aside><label for="mdp">Mot de passe : </label> <input type="password" id="mdp" name="mdp" placeholder="<mdp>"/> </aside>
                 <!-- pour distinguer avec les clients. -->
-                <aside><input type="submit" value="Connexion" name='action' /> </aside>
+                <aside><input type="button" value="Connexion" name='action' id="Connexion" class='valid'/> </aside>
             </form>
             <!-- footer -->
             <footer>

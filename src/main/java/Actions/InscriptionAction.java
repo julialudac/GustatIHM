@@ -27,9 +27,9 @@ public class InscriptionAction extends Action{
         String mail = request.getParameter("adrMail");
         String adresse = request.getParameter("adrLivraison");
         //String codePostal = request.getParameter("cp");
-        //String ville = request.getParameter("ville");
+        String ville = request.getParameter("ville");
         
-        Client c = new Client(nom,prenom,mail,adresse);
+        Client c = new Client(nom,prenom,mail,adresse+", "+ville);
         if(ServiceMetier.creerClient(c)) {
             try {
                 response.sendRedirect("accueilClient.html?info=2");

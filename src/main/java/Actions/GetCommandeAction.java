@@ -30,30 +30,57 @@ public class GetCommandeAction extends Action{
         HttpSession session = request.getSession(true);
         Livreur livreur = (Livreur) session.getAttribute("livreur");
         Commande commande = livreur.getCmdeEnCours();
-
-        List<ProduitCommande> produits = commande.getProduitCommande();
         
-        JsonArray jsonListe = new JsonArray();
-        for (ProduitCommande pc : produits) {
-            //System.out.println(restaurant);
-            JsonObject jsonProduitCommande = new JsonObject();
-            jsonProduitCommande.addProperty("nom",pc.getProduit().getDenomination());
-            jsonProduitCommande.addProperty("quantite",pc.getQte());
-            jsonProduitCommande.addProperty("prix", pc.getProduit().getPrix()*pc.getQte());
-            jsonListe.add(jsonProduitCommande);
-        }
         JsonObject jsonContainer = new JsonObject();
+		// contrairement à commande, qui est le contenu (les produtis commandés), commandeEnPers est le contenant           
+        JsonObject jsonCmdEnPers = new JsonObject();
         
-        JsonObject jsonRestaurant = new JsonObject();
-        jsonRestaurant.addProperty("adresseRestaurant", commande.getRestaurant().getAdresse());
-                
-        JsonObject jsonClient = new JsonObject();
-        jsonClient.addProperty("adresseClient", commande.getClient().getAdresse());
+        // Si aucune commande n'est associée
+        if(commande==null){
+            jsonCmdEnPers.addProperty("plein",0);  
+        }
+        else{
+            jsonCmdEnPers.addProperty("plein",1); 
+            List<ProduitCommande> produits = commande.getProduitCommande();
+            JsonArray jsonListe = new JsonArray();
+            for (ProduitCommande pc : produits) {
+                //System.out.println(restaurant);
+                JsonObject jsonProduitCommande = new JsonObject();
+                jsonProduitCommande.addProperty("nom",pc.getProduit().getDenomination());
+                jsonProduitCommande.addProperty("quantite",pc.getQte());
+                jsonProduitCommande.addProperty("prix", pc.getProduit().getPrix()*pc.getQte());
+                jsonListe.add(jsonProduitCommande);
+            }
+            
+
+            JsonObject jsonRestaurant = new JsonObject();
+            jsonRestaurant.addProperty("adresseRestaurant", commande.getRestaurant().getAdresse());
+
+            JsonObject jsonClient = new JsonObject();
+            jsonClient.addProperty("adresseClient", commande.getClient().getAdresse());
+
+            JsonObject jsonLivreur = new JsonObject();
+            int indexTiret = livreur.toString().indexOf(" -");
+            int apresVeloIndex = livreur.toString().indexOf("Vélo : ") + 7;
+            String nomComplet = livreur.toString().substring(apresVeloIndex,indexTiret);
+            jsonLivreur.addProperty("nomC", nomComplet);
+            
+            jsonContainer.add("commande", jsonListe);
+            jsonContainer.add("restaurant", jsonRestaurant);
+            jsonContainer.add("client", jsonClient);
+        }
         
-        jsonContainer.add("commande", jsonListe);
-        jsonContainer.add("restaurant", jsonRestaurant);
-        jsonContainer.add("client", jsonClient);
+        // Dans tous les cas, commande ou pas, on récup le livreur
+        JsonObject jsonLivreur = new JsonObject();
+        int indexTiret = livreur.toString().indexOf(" -");
+        int apresVeloIndex = livreur.toString().indexOf("Vélo : ") + 7;
+        String nomComplet = livreur.toString().substring(apresVeloIndex,indexTiret);
+        jsonLivreur.addProperty("nomC", nomComplet);
         
+        jsonContainer.add("commandeEnPers", jsonCmdEnPers);
+        jsonContainer.add("livreur",jsonLivreur);
+        
+        // Envoi de la réponse
         reponse.setContentType("text/html;charset=UTF-8");
         PrintWriter out = null;    
         try {

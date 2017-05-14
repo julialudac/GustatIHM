@@ -11,7 +11,6 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.steps.js"></script>
-        <!-- probleme de css: pour le div Validation, l'element <p id='p_adresseRestaurant'> n'affiche pas -->
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script language="javascript">
             var defaultColor="#ffffff";
@@ -86,7 +85,7 @@ and open the template in the editor.
                                                 + '<div>'+'<h3>Description</h3>'
                                                 +  produit.description+'</div>'
                                                 + '<div id="idProduit" style="display:none">'+produit.id+'</div>'
-                                                + '<div id="prixProduit" style="display:none">'+produit.prix+'</div>';
+                                                + '<div id="prixProduit" style="display:none">'+produit.prix+'€</div>';
                             $('#DetailsProduits').html(contenuHtml);
                         })
                         .fail(function() {
@@ -155,7 +154,7 @@ and open the template in the editor.
                                 contenuHtml += '<tr id="tr_produits" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td> ' 
                                         + produits[i].denomination + '<div id="idProd" style="display:none">'
                                         + produits[i].id+'</td><td> '
-                                        + produits[i].prix + '</td><tr> ';
+                                        + produits[i].prix + '€</td><tr> ';
                             }
                         contenuHtml += '</table>';
                         $('#listeProduits').html(contenuHtml);
@@ -168,6 +167,7 @@ and open the template in the editor.
                     });
                 });
             }
+            // du restau à la commande
             function suivant1(){
                 
                 chooseRow=9999;
@@ -187,6 +187,8 @@ and open the template in the editor.
                     //window.location.href=("choixDesProduits?idRestaurant="+id);
                     document.getElementById("Restaurants").style.display="none";
                     document.getElementById("Commandes").style.display="block";
+                    document.getElementById("commandeTab").style.backgroundColor="brown";
+                    document.getElementById("restoTab").style.backgroundColor="#ffcaae";
                     $(function() {
                         $.ajax({
                             url: './ActionServlet',
@@ -207,7 +209,7 @@ and open the template in the editor.
                                 contenuHtml += '<tr id="tr_produits" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td> ' 
                                         + produits[i].denomination + '<div id="idProd" style="display:none">'
                                         + produits[i].id+'</td><td> '
-                                        + produits[i].prix + '</td><tr> ';
+                                        + produits[i].prix + '€</td><tr> ';
                             }
                             contenuHtml += '</table>';
                             $('#listeProduits').html(contenuHtml);
@@ -350,6 +352,8 @@ and open the template in the editor.
             };
             function retour1(){
                 document.getElementById("Restaurants").style.display="block";
+                document.getElementById("restoTab").style.backgroundColor="brown";
+                document.getElementById("commandeTab").style.backgroundColor="#ffcaae";
                 document.getElementById("Commandes").style.display="none";
                 //var my_panier = document.getElementById("tab_panier");
                 $("#tab_panier tr").remove();
@@ -371,10 +375,14 @@ and open the template in the editor.
                         })
                 });
             }
+            // de la validation à la commande
             function retour2(){
                 document.getElementById("Validation").style.display="none";
                 document.getElementById("Commandes").style.display="block";
+                document.getElementById("commandeTab").style.backgroundColor="brown";
+                document.getElementById("validTab").style.backgroundColor="#ffcaae";
             }
+            // de la commande à la validation
             function suivant2(){
                 $("#table_panier_validation tr").remove();
                 chooseRow=9999;
@@ -383,6 +391,8 @@ and open the template in the editor.
                 if (totalAPayer>0){
                     document.getElementById("Commandes").style.display="none";
                     document.getElementById("Validation").style.display="block";
+                    document.getElementById("validTab").style.backgroundColor="brown";
+                    document.getElementById("commandeTab").style.backgroundColor="#ffcaae";
                     
                     //jquery pour afficher l'adresse de client
                     $(function() {
@@ -418,8 +428,9 @@ and open the template in the editor.
                             dataType: 'json'
                         })
                         .done(function(data) {
-                            var str = data;
+                            var str = data.adresse;
                             var contenuHtml = str;
+                            //var contenuHtml = "l'ad du resto";
                             $('#p_adresseRestaurant').html(contenuHtml);
                         })
                         .fail(function() {
@@ -481,18 +492,32 @@ and open the template in the editor.
         <!--header-->
         <header>
             <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span> 
-            <div ><p>Restaurants</p></div>
-            <div style="cursor:pointer" id="status" onclick="suivant()"><p>Commande</p></div>
-            <div style="cursor:pointer" id="status"><p>Validation</p></div>
-            <input type="submit" id="connection" value="v" class="statusConn"/>
+            <span class='centralH'>
+                <span style="background-color:brown;" id="restoTab">Restaurants</span>
+                <span> > </span>
+                <span style="cursor:pointer" id="commandeTab">Commande</span>
+                <span> > </span>
+                <span style="cursor:pointer" id="validTab">Validation</span>
+            </span>
+            <select style="background-color: brown; width: 200px;" name="listeDeconn" class="statusConn">
+                <option value="username" id="connection">< username ></option>
+                <option value="deconnexion">Se déconnecter</option>
+            </select>
             <script>
                 var get = window.location.search.substring(1);
                 if(get.length > 1)
                 {
                     var userName = get.substring(get.indexOf("=")+1);
                     //console.log(userName);
-                    document.getElementById("connection").value = userName;  
-                }
+                    document.getElementById("connection").innerHTML = userName;  
+                } 
+                // Pour la deconn 
+                var listeDer = document.getElementsByTagName("select")[0];
+                listeDer.onchange = function(){
+                    if(listeDer.value == "deconnexion"){
+                        window.location.href = "accueilClient.html";
+                    }
+                };
             </script>
         </header>
         
@@ -502,7 +527,7 @@ and open the template in the editor.
             <h2>Veuillez selectionner un restaurant</h2>
             <div>
                 <form>
-                    <input type="text" id='searchR' placeholder="Rechercher" onkeyup="searchRestaurant()">
+                    <input type="text" id='searchR' class ='searchBar' placeholder="Rechercher" onkeyup="searchRestaurant()">
                 </form>
                 <!--script pour enlever l'action de taper enter dans input -->
                 <script type="text/javascript">  
@@ -517,7 +542,7 @@ and open the template in the editor.
                 <span>chargement en cours...</span>
             </div>
             <div id='DetailsRestaurant'>
-                <span>rien choisi</span>
+                <span>Vous n'avez pas encore choisi de restaurant</span>
             </div>
             
             <script>
@@ -554,7 +579,7 @@ and open the template in the editor.
                 });
             </script>
             
-            <button type="button" onclick="suivant1();creerCommande();">Suivant</button>
+            <button type="button" class="valid" onclick="suivant1();creerCommande();">Suivant</button>
             <!-- footer -->      
         </div> 
         
@@ -564,7 +589,7 @@ and open the template in the editor.
             <h2>Veuillez ajouter des produits à votre panier</h2>
             <div>
                 <form>
-                    <input type="text" id='searchP' placeholder="Rechercher" onkeyup="searchProduit()">
+                    <input type="text" id='searchP' class='searchBar' placeholder="Rechercher..." onkeyup="searchProduit()">
                 </form>
                 <!--script pour enlever l'action de taper enter dans input -->
                 <script type="text/javascript">  
@@ -578,11 +603,11 @@ and open the template in the editor.
             <div id='listeProduits'>
                 <span>chargement en cours...</span>
             </div>
-            <div id='DetailsProduits'>
-                <span>rien choisi</span>
+            <div id='DetailsProduits' class="moreInfo">
+                <span>Nous n'avez pas encore choisi de produit</span>
             </div>
-            <div id='choisir'>
-                Quantite: <input type="number" id='quantite' oninput="calculer()"><br/>
+            <div id='choisir' class="moreInfo">
+                Quantité: <input type="number" id='quantite' oninput="calculer()" ><br/>
                 <script>
                     $('input[type=number]').keypress(function(e) {
                         if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
@@ -591,7 +616,7 @@ and open the template in the editor.
                     });
                 </script>
                 <div>
-                    Prix: <span id='total'>a calculer</span><br/>
+                    Prix: <span id='total'>a calculer</span>€<br/>
                 </div>
                 <button type="button" onclick="ajouter()">Ajouter au panier</button>
             </div>
@@ -607,8 +632,8 @@ and open the template in the editor.
                     Total a payer: <span id='sum'>0</span><br/>
                 </div>
             </div>
-            <button type="button" onclick="retour1();annulerCommande();">Retour</button>
-            <button type="button" onclick="suivant2()">Suivant</button>
+            <button type="button" class="cancel" onclick="retour1();annulerCommande();">Retour</button>
+            <button type="button" class="valid" onclick="suivant2()">Suivant</button>
         </div> 
         
         <!--interface Validation-->
@@ -619,7 +644,7 @@ and open the template in the editor.
                 <table id='table_message_validation'>
                     <tr>
                         <td>
-                            Restaurants:
+                            Restaurant:
                             <p id='p_adresseRestaurant'>TODO</p>
                         </td>
                         <td>

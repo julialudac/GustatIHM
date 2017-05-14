@@ -5,6 +5,7 @@
  */
 package Actions;
 
+import com.google.gson.JsonObject;
 import com.insa.gustatif.metier.modele.Client;
 import com.insa.gustatif.metier.modele.Livreur;
 import com.insa.gustatif.metier.service.ServiceMetier;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpSession;
  * @author julia
  */
 public class ConnectionNonClientAction extends Action{
+    // renvoie le vélo ou pas et garde la session ou pas. On y arrive à là si bien sur le mdp est différent de 0
+    // => pas l'admin
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
@@ -37,6 +40,7 @@ public class ConnectionNonClientAction extends Action{
         System.out.println("Je suisConnectionNonClient");
         
         String mdp = request.getParameter("mdp");
+        System.out.println("Mor de passe :"+mdp);
         // attention lors de la conversion du mdp
         long mdpl = -123; // cette ID n'existe pas
         try{
@@ -45,48 +49,43 @@ public class ConnectionNonClientAction extends Action{
             System.out.println("Le mdp entré n'est pas un nb");
         }
         
-        // Si c'est l'admin qui se connecte
-        if(mdpl==0){
-            try {
-                reponse.sendRedirect("itfAdmin.html");
-            } catch (IOException ex) {
-                Logger.getLogger(ConnectionNonClientAction.class.getName()).log(Level.SEVERE, null, ex);
+        JsonObject jsonVelo = new JsonObject();
+        Livreur l = null;
+        try {
+            l = ServiceMetier.connexionLivreur(mdpl);
+            if(l.getTypeId().equals("drone")){
+                l=null;
             }
+        } catch (Exception ex) {
+            Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // Sinon c'est que c'est un livreur qui se connecte
+        // si livreur trouvé, enregistrement dans la session et l'objet Json est dit plein
+        if (l!=null){
+            // enregistrer le livreur pour la session
+            session.setAttribute("livreur",l);
+            System.out.println("Livreur trouvé");
+            jsonVelo.addProperty("plein",1);
+            int indexTiret = l.toString().indexOf(" -");
+            int apresVeloIndex = l.toString().indexOf("Vélo : ") + 7;
+            String nomComplet = l.toString().substring(apresVeloIndex,indexTiret);
+            jsonVelo.addProperty("nomC",nomComplet);
+            jsonVelo.addProperty("plein",1);
+        }
         else{
-            Livreur l = null;
-            try {
-                l = ServiceMetier.connexionLivreur(mdpl);
-                if(l.getTypeId().equals("drone")){
-                    l=null;
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            // si livreur trouvé, direction itf livreur
-            if (l!=null){
-                // enregistrer l'id pour la session
-                session.setAttribute("livreur",l);
-                System.out.println("Livreur trouvé");
-                System.out.println(l);
-                PrintWriter out = null; 
-                try {
-                    reponse.sendRedirect("itfLivreur.html");
-                } catch (IOException ex) {
-                    Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
-                }       
-            // sinon redirection connexion
-            } else {
-                try {
-                    System.out.println("Livreur pas trouvé");
-                    reponse.sendRedirect("accueilNonClient.html?info=1");
-                } catch (IOException ex) {
-                    Logger.getLogger(ConnectionAction.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } 
-            
+            System.out.println("Livreur pas trouvé");
+            jsonVelo.addProperty("plein",0);
         }
+        
+        // envoi de l'objet Json
+        reponse.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = null;    
+        try {
+            out = reponse.getWriter();
+        } catch (IOException ex) {
+            Logger.getLogger(GetRestaurantsAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        out.println(jsonVelo);
+        out.close();
         
     }
     

@@ -13,15 +13,15 @@ body{
 }
 
 div{
-    
+    position:relative;
 }
 
 h1{
     text-align : center;
 }
 
-header, footer, span, input{
-    border-radius : 10px;   
+header, footer, span, input, select{
+    border-radius : 7px;   
 }
 
 header{
@@ -65,7 +65,7 @@ input[type="text"], input[type="password"]{
     width: 200px;
 }
 
-input[type="button"], input[type="submit"],input[type="text"],input[type="password"]  {
+input[type="button"], input[type="submit"],input[type="text"]:not(.searchBar),input[type="password"]  {
     position : absolute;
     right : 0%;
 }
@@ -83,6 +83,10 @@ input[type="submit"], .valid{
 aside{
     position : relative;
     margin:10px;
+}
+
+select option{
+    background-color:brown;
 }
 
 span{
@@ -113,6 +117,8 @@ th{
     width: 500px;
     height: 30px;
     border: solid 2px gray;
+    display: flex;
+    justify-content: space-between;
 }
 
 .moreInfo{
@@ -122,7 +128,7 @@ th{
 }
 
 .searchBar{
-    background-image: url('search.png');
+    position : relative;
 }
 
 .statusConn{

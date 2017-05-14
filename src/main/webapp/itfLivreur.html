@@ -12,24 +12,16 @@ and open the template in the editor.
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
         <script>
-            function valider(){
-                $(function() {
-                    $.ajax({
-                        url: './ActionServlet',
-                        type: 'POST',
-                        data: {
-                            action: 'cloturerCommande'
-                        },
-                        dataType: 'json'
-                    });
-                });
-            }
+            
             
         </script>
     </head>
     <body>
         <script>
             $(function(){
+                
+                var plein;
+                
                 $.ajax({
                     url: './ActionServlet',
                     type: 'POST',
@@ -39,40 +31,86 @@ and open the template in the editor.
                     dataType: 'json'
                 })
                 .done(function(data) {
-                    var commande = data.commande;
-                    var contenuHtml = '<table><thead><th>Nom</th><th>Quantite</th><th>Prix<th></thead><tbody>';
+                    // contrairement à commande, qui est le contenu (les produtis commandés), commandeEnPers est le contenant
+                    plein = data.commandeEnPers.plein;
+                    // Si la commande est là
+                    if(plein==1){
+                        var commande = data.commande;
+                        var contenuHtml = '<table><thead><th>Nom</th><th>Quantite</th><th>Prix<th></thead><tbody>';
                         var i; 
                         for (i = 0; i < commande.length; i++) {
                             //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
                             contenuHtml += '<tr><td> ' 
                                     + commande[i].nom + '</td><td>'
                                     + commande[i].quantite + '</td><td>'
-                                    + commande[i].prix + '</td></tr> ';
+                                    + commande[i].prix + '€</td></tr> ';
                         }
                         contenuHtml += '</tbody></table>';
                         $('#commandeEnC').html(contenuHtml);
                         $('#p_Restaurant').html(data.restaurant.adresseRestaurant);
                         $('#p_Client').html(data.client.adresseClient);
+                    }
+                    else{
+                        $('#commandeEnC').html('Pas de commande en cours');
+                        $('#p_Restaurant').html("Donc pas de restaurant mobilisé ^^");
+                        $('#p_Client').html("Donc pas de client à satisfaire pour le moment XD");
+                    }
+                    // POur le nom du livreur, toujours récup
+                    var nom = data.livreur.nomC;
+                    document.getElementById("connection").innerHTML = nom;  
+                    // Pour la deconn 
+                    var listeDer = document.getElementsByTagName("select")[0];
+                    listeDer.onchange = function(){
+                        if(listeDer.value == "deconnexion"){
+                            window.location.href = "accueilNonClient.html";
+                        }
+                    };
                 })
                 .fail(function() {
-                    $('#commandeEnC').html('Pas de commande en cours');
-                    $('#p_Restaurant').html("");
-                    $('#p_Client').html("");
+                    $('#commandeEnC').html('Erreur de chargement de la BD');
+                    $('#p_Restaurant').html("-");
+                    $('#p_Client').html("-");
                 })
                 .always(function() {
-                    //
+                    function valider(){
+                        // Si commande présente, on demande au serveur de la cloturer
+                        if(plein==1){
+                            $.ajax({
+                                url: './ActionServlet',
+                                type: 'POST',
+                                data: {
+                                    action: 'cloturerCommande'
+                                },
+                                dataType: 'json'
+                            });
+                            alert("Notre serveur a bien pris en compte votre choix. La commande est donc normalement clôturée");
+                        }
+                        // Sinon, on dit qu'il n'y a pas de commande à clôturer
+                        else{
+                            alert("Pas de commande attribuée");
+                        }
+
+                    }
+                    $(".valid").click(function(){
+                        valider();
+                        location.reload();
+                    });
                 });
+                
+                
             });
+            
         </script>
         
         <header>
             <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span>  
-            <select name="listeDeconn" style="width: 200px;">
-                <option value="v" id="userName">v</option>
-                <option value="deconnexion" class="statusConn">Se déconnecter</option>
+            <select style="background-color: brown; width: 200px;" name="listeDeconn" class="statusConn">
+                <option value="username" id="connection">< username ></option>
+                <option value="deconnexion">Se déconnecter</option>
             </select>
         </header>
-        <h1>Votre commande actuelle</h1>
+        <h1>Interface Livreur</h1>
+        <h2>Votre commande actuelle</h2>
         <div id='commandeEnC'>
             Chargement en cours...
             <!--
@@ -101,7 +139,7 @@ and open the template in the editor.
             </section>
         </div>
         <div>
-            <button type="button" onclick="valider();location.reload();">Valider la commande</button>
+            <button type="button" class="valid">Valider la commande</button>
         </div>
         <footer>
             <span><a href='conditions.html' target="_blank">Conditions d'utilisation</a></span>
