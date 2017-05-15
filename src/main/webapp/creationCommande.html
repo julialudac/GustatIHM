@@ -499,9 +499,12 @@ and open the template in the editor.
                             action: 'validerCommande'
                         },
                         dataType: 'json'
-                    });
+                    })
+                    .done(function(data) {
+                        var message = data;
+                        alert(message.info);
+                    })
                 });
-                alert('Votre commande est bien validé');
                 retour2();
                 retour1();
             }
