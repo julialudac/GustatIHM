@@ -320,6 +320,8 @@ and open the template in the editor.
                             dataType: 'json'
                         })
                     });
+                    $("#quantite").val(0);
+                    $("#total").text(0);
                 }
                 var my_span1 = document.getElementById("sum");
                 my_span1.innerHTML  = calculerSum(document.getElementById("tab_panier"),2);
