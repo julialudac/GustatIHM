@@ -11,6 +11,63 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.steps.js"></script>
+        <script language="javascript">
+            var defaultColor="#ffffff";
+            var overColor="yellow";
+            var clickColor="pink";
+            var chooseRow=9999;
+            function over_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=overColor;
+            }
+            function remove_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=defaultColor;
+            }
+            function click_color(obj){
+                //alert("chooseRow="+chooseRow);
+                //console.log("dans function clickcolor");
+                var tb=obj.parentNode.parentNode;
+                if(chooseRow!=9999){
+                    var lastObj=tb.rows[chooseRow];
+                    lastObj.style.backgroundColor=defaultColor;
+                }
+                chooseRow=obj.rowIndex;
+                obj.style.backgroundColor=clickColor;        
+                
+                //alert($(obj).find("#idResto").text());
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'GET',
+                        data: {
+                            action: 'detailDrone',
+                            idDrone: $(obj).find("#idDrone").text()
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var drone = data;
+                        var contenuHtml = '<h2>Drone n'+drone.id+'</h2>' 
+                                            + '<div>'+'<h3>Adresse</h3>'
+                                            + drone.adresse+'</div>'
+                                            + '<div>'+'<h3>Disponibilité</h3>'
+                                            +  drone.disponibilite+'</div>'
+                                            + '<div>'+'<h3>Vitesse moyenne</h3>'
+                                            +  drone.vitesse+'</div>'
+                                            + '<div>'+'<h3>Poids max</h3>'
+                                            +  drone.poidsMax+'</div>';
+                        $('#descr').html(contenuHtml);
+                    })
+                    .fail(function() {
+                        $('#descr').html('ERREUR de chargement');
+                    })
+                    .always(function() {
+                        //
+                    });
+                });
+            }
+        </script>
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
     </head>
     <body>

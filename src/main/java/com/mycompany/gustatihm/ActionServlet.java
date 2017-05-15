@@ -113,7 +113,10 @@ public class ActionServlet extends HttpServlet {
                 action = new GetActeursAction();
                 action.execute(request, reponse);
                 break;
-
+            case "detailDrone":
+                action = new DetailDroneAction();
+                action.execute(request, reponse);
+                break;
         }
     }
 
