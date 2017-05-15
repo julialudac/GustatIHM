@@ -54,7 +54,7 @@ and open the template in the editor.
                                                 + '<div>'+'<h3>Adresse</h3>'
                                                 + resto.adresse+'</div>'
                                                 + '<div>'+'<h3>Description</h3>'
-                                                +  resto.description+'</div>'
+                                                +  '<div class=moreInfo>'+ resto.description+'</div> </div>'
                                                 + '<div id="idRestaurant" style="display:none">'+resto.id+'</div>';
                             $('#DetailsRestaurant').html(contenuHtml);
                         })
@@ -83,10 +83,11 @@ and open the template in the editor.
                             var produit = data;
                             var contenuHtml = '<h2 id="nomProduit">'+produit.denomination+'</h2>' 
                                                 + '<div>'+'<h3>Description</h3>'
-                                                +  produit.description+'</div>'
+                                                + '<div class="moreInfo">' + produit.description+'</div></div>'
                                                 + '<div id="idProduit" style="display:none">'+produit.id+'</div>'
                                                 + '<div id="prixProduit" style="display:none">'+produit.prix+'€</div>';
                             $('#DetailsProduits').html(contenuHtml);
+                            $('#choisir').show();
                         })
                         .fail(function() {
                             $('#DetailsProduits').html('ERREUR de chargement');
@@ -153,8 +154,8 @@ and open the template in the editor.
                                 //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
                                 contenuHtml += '<tr id="tr_produits" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td id="nomProduit"> ' 
                                         + produits[i].denomination + '<div id="idProd" style="display:none">'
-                                        + produits[i].id+'</div></td><td> '
-                                        + produits[i].prix + '€</td><tr> ';
+                                        + produits[i].id+'</td><td> '
+                                        + produits[i].prix + '€</td><tr></div> ';
                             }
                         contenuHtml += '</table>';
                         $('#listeProduits').html(contenuHtml);
@@ -560,10 +561,10 @@ and open the template in the editor.
         <!--interface Restaurants-->
         <div id="Restaurants">
             <h1 align="center">Choix du restaurant</h1>
-            <h2>Veuillez selectionner un restaurant</h2>
+            <h2 class='aTrait'>Veuillez selectionner un restaurant</h2>
             <div>
                 <form>
-                    <input type="text" id='searchR' class ='searchBar' placeholder="Rechercher" onkeyup="searchRestaurant()">
+                    <input type="text" id='searchR' class ='searchBar' placeholder="Rechercher..." onkeyup="searchRestaurant()">
                 </form>
                 <!--script pour enlever l'action de taper enter dans input -->
                 <script type="text/javascript">  
@@ -574,13 +575,14 @@ and open the template in the editor.
                     });
                 </script> 
             </div>
-            <div id='listeRestaurants'>
-                <span>chargement en cours...</span>
+            <div class="gdCont">
+                <div id='listeRestaurants' class='morceau'>
+                    <span>chargement en cours...</span>
+                </div>
+                <div id='DetailsRestaurant' class='morceau'>
+                    <span>Vous n'avez pas encore choisi de restaurant</span>
+                </div>
             </div>
-            <div id='DetailsRestaurant'>
-                <span>Vous n'avez pas encore choisi de restaurant</span>
-            </div>
-            
             <script>
                 $(function() {
                     $.ajax({
@@ -622,7 +624,7 @@ and open the template in the editor.
         <!--interface Commandes-->
         <div id="Commandes" style="display: none;">
             <h1 align="center">Choix des produits</h1>
-            <h2>Veuillez ajouter des produits à votre panier</h2>
+            <h2 class='aTrait'>Veuillez ajouter des produits à votre panier</h2>
             <div>
                 <form>
                     <input type="text" id='searchP' class='searchBar' placeholder="Rechercher..." onkeyup="searchProduit()">
@@ -636,27 +638,33 @@ and open the template in the editor.
                     });
                 </script>
             </div>
-            <div id='listeProduits'>
+            <div class="gdCont">
+                <div id='listeProduits' class='morceau'>
                 <span>chargement en cours...</span>
-            </div>
-            <div id='DetailsProduits' class="moreInfo">
-                <span>Nous n'avez pas encore choisi de produit</span>
-            </div>
-            <div id='choisir' class="moreInfo">
-                Quantité: <input type="number" id='quantite' oninput="calculer()" ><br/>
-                <script>
-                    $('input[type=number]').keypress(function(e) {
-                        if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
-                            return false;
-                        }
-                    });
-                </script>
-                <div>
-                    Prix: <span id='total'>a calculer</span>€<br/>
                 </div>
-                <button type="button" onclick="ajouter()">Ajouter au panier</button>
+                <div class='morceau'>
+                    <div id='DetailsProduits'>
+                    <span>Nous n'avez pas encore choisi de produit</span>
+                    </div>
+                    <div id='choisir' style="display: none;">
+                        Quantité: <input type="text" id='quantite' oninput="calculer()" ><br/>
+                        <script>
+                            $('input[type=number]').keypress(function(e) {
+                                if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+                                    return false;
+                                }
+                            });
+                        </script>
+                        <div>
+                            Prix: <span id='total'>a calculer</span>€<br/>
+                        </div>
+                        <button type="button" style="background-color: green; color:white;" onclick="ajouter()">Ajouter au panier</button>
+                    </div>
+                </div>
+                
             </div>
-            <div id='div_panier'>
+            
+            <div id='div_panier' style="width:70%">
                 <h3>Votre panier actuel: </h3>
                 <table>
                     <thead>
@@ -675,8 +683,8 @@ and open the template in the editor.
         <!--interface Validation-->
         <div id="Validation" style="display: none;">
             <h1 align="center">Validation de la commande</h1>
-            <h2>Veuillez valider votre panier</h2>
-            <div id='div_panier_validation'>
+            <h2 class="aTrait">Veuillez valider votre panier</h2>
+            <div id='div_panier_validation' style="width:70%">
                 <table id='table_message_validation'>
                     <tr>
                         <td>
@@ -699,9 +707,8 @@ and open the template in the editor.
                 <div>
                     Total a payer: <span id='sum_validation'>0</span><br/>
                 </div>
-                <button type="button" onclick="retour2()">Retour</button>
-                <button type="button" onclick="if (confirm('Vous voulez confirmer votre commande?')) 
-                    {valider();}else{return false;}">Valider</button>
+                <button type="button" class="cancel" onclick="retour2()">Retour</button>
+                <button type="button" class="valid" onclick="valider()">Valider</button>
             </div>
         </div>
         <footer>

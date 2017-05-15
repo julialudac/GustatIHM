@@ -109,37 +109,41 @@ and open the template in the editor.
                 <option value="deconnexion">Se déconnecter</option>
             </select>
         </header>
-        <h1>Interface Livreur</h1>
+        <h1 class="aTrait">Interface Livreur</h1>
         <h2>Votre commande actuelle</h2>
-        <div id='commandeEnC'>
-            Chargement en cours...
-            <!--
-            <table>
-                <thead>
-                    <tr><th>Nom</th><th>Quantité</th><th>Prix</th></tr>
-                </thead>
-                <tbody>
-                    
-                </tbody>
-            </table>
-            -->
-        </div>
-        <div id="detailCommande">
-            <section>
-                <h2>Restaurant</h2>
-                <p id="p_Restaurant">
-                    Chargement en cours...
-                </p>
-            </section>
-            <section>
-                <h2>Client</h2>
-                <p id="p_Client">
-                    Chargement en cours...
-                </p>
-            </section>
-        </div>
-        <div>
-            <button type="button" class="valid">Valider la commande</button>
+        <div class='gdCont'>
+            <div id='commandeEnC' class='morceau'>
+                Chargement en cours...
+                <!--
+                <table>
+                    <thead>
+                        <tr><th>Nom</th><th>Quantité</th><th>Prix</th></tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                -->
+            </div>
+            <div id="detailCommande" class='morceau'>
+                <section>
+                    <h2>Restaurant</h2>
+                    <p id="p_Restaurant">
+                        Chargement en cours...
+                    </p>
+                </section>
+                <section>
+                    <h2>Client</h2>
+                    <p id="p_Client">
+                        Chargement en cours...
+                    </p>
+                </section>
+            </div>
+            <div>
+                <span style="display:inline-block">
+                    <button type="button" class="valid">Valider la commande</button>
+                </span>
+            </div>
         </div>
         <footer>
             <span><a href='conditions.html' target="_blank">Conditions d'utilisation</a></span>
