@@ -117,6 +117,14 @@ public class ActionServlet extends HttpServlet {
                 action = new DetailDroneAction();
                 action.execute(request, reponse);
                 break;
+            case "cloturerParGestionnaire":
+                action = new CloturerCommandeParGestionnaireAction();
+                action.execute(request, reponse);
+                break;
+            case "detailVelo":
+                action = new DetailVeloAction();
+                action.execute(request, reponse);
+                break;
         }
     }
 

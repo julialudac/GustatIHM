@@ -12,6 +12,68 @@ and open the template in the editor.
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.steps.js"></script>
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
+        <script language="javascript">
+            var defaultColor="#ffffff";
+            var overColor="yellow";
+            var clickColor="pink";
+            var chooseRow=9999;
+            function over_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=overColor;
+            }
+            function remove_color(obj){
+                if(obj.style.backgroundColor!=clickColor)
+                    obj.style.backgroundColor=defaultColor;
+            }
+            function click_color(obj){
+                //alert("chooseRow="+chooseRow);
+                //console.log("dans function clickcolor");
+                var tb=obj.parentNode.parentNode;
+                if(chooseRow!=9999){
+                    var lastObj=tb.rows[chooseRow];
+                    lastObj.style.backgroundColor=defaultColor;
+                }
+                chooseRow=obj.rowIndex;
+                obj.style.backgroundColor=clickColor;        
+                
+                //alert($(obj).find("#idVelo").text());
+                $(function() {
+                    $.ajax({
+                        url: './ActionServlet',
+                        type: 'GET',
+                        data: {
+                            action: 'detailVelo',
+                            idVelo: $(obj).find("#idVelo").text()
+                        },
+                        dataType: 'json'
+                    })
+                    .done(function(data) {
+                        var velo = data;
+                        var contenuHtml = '<h2 id="h2_idDrone">Drone n'+velo.id+'</h2>' 
+                                            + '<div>'+'<h3>Nom prénom</h3>'
+                                            + velo.nom+'</div>'
+                                            + '<div>'+'<h3>Adresse</h3>'
+                                            + velo.adresse+'</div>'
+                                            + '<div>'+'<h3>Email Adresse</h3>'
+                                            + velo.email+'</div>'
+                                            + '<div>'+'<h3>Disponibilité</h3><span id="span_disp">'
+                                            + velo.disponibilite+'</span></div>'
+                                            + '<div>'+'<h3>Poids max</h3><span>'
+                                            + velo.poidsMax+'</span></div>';
+                        $('#descr').html(contenuHtml);
+                    })
+                    .fail(function() {
+                        $('#descr').html('ERREUR de chargement');
+                    })
+                    .always(function() {
+                        //
+                    });
+                });
+            }
+            function DetailCommande(){
+                window.open("detailCommande.html");
+            }
+        </script>
     </head>
     <body>
         <!--------header----------->
@@ -41,7 +103,7 @@ and open the template in the editor.
         <!-- Détail vélo -->
         <div>
             <div id="descr">Pas de vélo sélectionné</div>
-            <input type="button" value="Détails Commande"/>
+            <input type="button" value="Détails Commande" onclick="DetailCommande()"/>
         </div>
         
         
@@ -62,9 +124,10 @@ and open the template in the editor.
                     var contenuHtml = '<table><thead><th>Nom prénom</th><th>Adresse</th><th>Dispo</th><th>Poids max</th></thead><tbody>';
                     var i; 
                     for (i = 0; i < velos.length; i++) {
-                        contenuHtml += '<tr id="tr_drone" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)">\n\
-                        <td id="idDrone"> ' + velos[i].nomC + '</td>\n\
-                        <td>'+ velos[i].adresse + '</td>'
+                        contenuHtml += '<tr id="tr_drone" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)"><td id="nomVelo">' 
+                        + velos[i].nomC + '<div id="idVelo" style="display:none">'
+                        + velos[i].idLivreur + '</div></td><td>'
+                        + velos[i].adresse + '</td>'
                         + '<td>'+velos[i].dispo +'</td>'
                         + '<td>'+velos[i].poidsMax+'</td></tr>';
                     }

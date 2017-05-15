@@ -48,15 +48,15 @@ and open the template in the editor.
                     })
                     .done(function(data) {
                         var drone = data;
-                        var contenuHtml = '<h2>Drone n'+drone.id+'</h2>' 
+                        var contenuHtml = '<h2 id="h2_idDrone">Drone n'+drone.id+'</h2>' 
                                             + '<div>'+'<h3>Adresse</h3>'
                                             + drone.adresse+'</div>'
-                                            + '<div>'+'<h3>Disponibilité</h3>'
-                                            +  drone.disponibilite+'</div>'
-                                            + '<div>'+'<h3>Vitesse moyenne</h3>'
-                                            +  drone.vitesse+'</div>'
-                                            + '<div>'+'<h3>Poids max</h3>'
-                                            +  drone.poidsMax+'</div>';
+                                            + '<div>'+'<h3>Disponibilité</h3><span id="span_disp">'
+                                            +  drone.disponibilite+'</span></div>'
+                                            + '<div>'+'<h3>Vitesse moyenne</h3><span>'
+                                            +  drone.vitesse+'</span></div>'
+                                            + '<div>'+'<h3>Poids max</h3><span>'
+                                            +  drone.poidsMax+'</span></div>';
                         $('#descr').html(contenuHtml);
                     })
                     .fail(function() {
@@ -66,6 +66,61 @@ and open the template in the editor.
                         //
                     });
                 });
+            }
+            function cloturer(){
+                console.log($("#span_disp").text());
+                if($("#span_disp").text()=="NON"){
+                    $(function() {
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'GET',
+                            data: {
+                                action: 'cloturerParGestionnaire',
+                                idDrone: $('#h2_idDrone').text()
+                            },
+                            dataType: 'json'
+                        })
+                    })
+                    alert("La commande est bien cloturé");
+                    //raifrachir le tableu pour maj la disponibilite de drone
+                    $(function(){
+                        // requête ajax pour récupérer les drones 
+                        $.ajax({
+                            url: './ActionServlet',
+                            type: 'POST',
+                            data: {
+                                action: 'getClientsRestoLivreurs',
+                            },
+                            dataType: 'json'
+                        })
+                        .done(function(data) {
+                            var drones = data.drones;
+                            var contenuHtml = '<table><thead><th>Code Drone</th><th>Adresse</th><th>Dispo</th><th>Vitesse Moy</th><th>Poids max</th></thead><tbody>';
+                            var i; 
+                            for (i = 0; i < drones.length; i++) {
+                                contenuHtml += '<tr id="tr_drone" style="cursor:pointer" onmouseover="over_color(this)" onmouseout="remove_color(this)" onclick="click_color(this)">\n\
+                                <td id="idDrone"> ' + drones[i].code + '</td>\n\
+                                <td>'+ drones[i].adresse + '</td>'
+                                + '<td>'+drones[i].dispo +'</td>'
+                                + '<td>'+drones[i].vit+'</td>'
+                                + '<td>'+drones[i].poidsMax+'</td></tr>';
+                            }
+                            contenuHtml += '</tbody></table>';
+                            $('#tabDrones').html(contenuHtml);
+                        })
+                        .fail(function() {
+                            $('#tabDrones').html('ERREUR de chargement');
+                        })
+                        .always(function() {
+                            //
+                        });
+                    });
+                } else {
+                    alert("Pas de commande attribuée")
+                }
+            }
+            function DetailCommande(){
+                window.open("detailCommande.html");
             }
         </script>
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
@@ -98,8 +153,8 @@ and open the template in the editor.
         <!-- Détail drone -->
         <div>
             <div id="descr">Pas de drône sélectionné</div>
-            <input type="button" value="Détails Commande"/> <br/>
-            <input type="button" value="Clôturer Commande"/>
+            <input type="button" value="Détails Commande" onclick="DetailCommande()"/> <br/>
+            <input type="button" value="Clôturer Commande" onclick="cloturer()"/>
         </div>
         
         

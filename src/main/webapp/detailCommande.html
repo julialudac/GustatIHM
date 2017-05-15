@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Detail de Commande</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
+        <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+        <script>
+        </script>
+    </head>
+    <body>
+        <script>
+            $(function(){
+                $.ajax({
+                    url: './ActionServlet',
+                    type: 'POST',
+                    data: {
+                        action: 'getCommande'
+                    },
+                    dataType: 'json'
+                })
+                .done(function(data) {
+                    // contrairement à commande, qui est le contenu (les produtis commandés), commandeEnPers est le contenant
+                    plein = data.commandeEnPers.plein;
+                    // Si la commande est là
+                    if(plein==1){
+                        var commande = data.commande;
+                        var contenuHtml = '<table><thead><th>Nom</th><th>Quantite</th><th>Prix<th></thead><tbody>';
+                        var i; 
+                        for (i = 0; i < commande.length; i++) {
+                            //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+                            contenuHtml += '<tr><td> ' 
+                                    + commande[i].nom + '</td><td>'
+                                    + commande[i].quantite + '</td><td>'
+                                    + commande[i].prix + '€</td></tr> ';
+                        }
+                        contenuHtml += '</tbody></table>';
+                        $('#commandeEnC').html(contenuHtml);
+                        $('#p_Restaurant').html(data.restaurant.adresseRestaurant);
+                        $('#p_Client').html(data.client.adresseClient);
+                    }else{
+                        $('#commandeEnC').html('Pas de commande en cours');
+                        $('#p_Restaurant').html("Donc pas de restaurant mobilisé ^^");
+                        $('#p_Client').html("Donc pas de client à satisfaire pour le moment XD");
+                    }
+                })
+
+                .fail(function() {
+                    $('#commandeEnC').html('Erreur de chargement de la BD');
+                    $('#p_Restaurant').html("-");
+                    $('#p_Client').html("-");
+                }) 
+            });
+            
+        </script>
+        
+        <header>
+            <span id="spanLogo"> <img src="logoGustatif.jpg"/> </span>  
+        </header>
+        <h1>Detail de commande</h1>
+        <div id='commandeEnC'>
+            Chargement en cours...
+            <!--
+            <table>
+                <thead>
+                    <tr><th>Nom</th><th>Quantité</th><th>Prix</th></tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+            -->
+        </div>
+        <div id="detailCommande">
+            <section>
+                <h2>Restaurant</h2>
+                <p id="p_Restaurant">
+                    Chargement en cours...
+                </p>
+            </section>
+            <section>
+                <h2>Client</h2>
+                <p id="p_Client">
+                    Chargement en cours...
+                </p>
+            </section>
+        </div>
+        <footer>
+            <span><a href='conditions.html' target="_blank">Conditions d'utilisation</a></span>
+            <span><a href='politique.html' target="_blank">Politique de confidentialité</a></span>
+            <span><a href='mentions.html' target="_blank">Mentions légales</a></span>
+        </footer> 
+    </body>
+</html>

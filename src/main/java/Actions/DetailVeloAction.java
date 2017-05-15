@@ -8,6 +8,7 @@ package Actions;
 import com.google.gson.JsonObject;
 import com.insa.gustatif.metier.modele.Livreur;
 import com.insa.gustatif.metier.modele.LivreurDrone;
+import com.insa.gustatif.metier.modele.LivreurVelo;
 import com.insa.gustatif.metier.service.ServiceMetier;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,38 +24,37 @@ import javax.servlet.http.HttpSession;
  *
  * @author wth
  */
-public class DetailDroneAction extends Action{
+public class DetailVeloAction extends Action{
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
         // récupérer l'instance concerné 
-        System.out.println("Je suis dans action DetailDrone");
+        System.out.println("Je suis dans action DetailVeloAction");
         HttpSession session = request.getSession(true);
-        String idStr = request.getParameter("idDrone");
-        System.out.println(idStr);
-        long id = parseLong(idStr.substring(1, idStr.length()));
+        long id = parseLong(request.getParameter("idVelo"));
         System.out.println(id);
-        List<Livreur> listDrone = ServiceMetier.findAllDrones();
-        LivreurDrone drone = null;
-        for(Livreur l:listDrone){
+        List<Livreur> listLivreur = ServiceMetier.findAllLivreurs();
+        LivreurVelo velo = null;
+        for(Livreur l:listLivreur){
             if (l.getIdLivreur()==id){
-                drone = (LivreurDrone) l;
+                velo =  (LivreurVelo) l;
                 break;
             }
         }
-        session.setAttribute("livreur", drone);
+        session.setAttribute("livreur", velo);
         String str = "";
-        if (drone.getCmdeEnCours()==null){
+        if (velo.getCmdeEnCours()==null){
             str = "OUI";
         } else {
             str = "NON";
         }
-        JsonObject jsonDrone = new JsonObject();
-        jsonDrone.addProperty("id", id);
-        jsonDrone.addProperty("disponibilite", str);
-        jsonDrone.addProperty("adresse", drone.getAdresse());
-        jsonDrone.addProperty("vitesse", drone.getVitesseMoyenne());
-        jsonDrone.addProperty("poidsMax", drone.getChargeMaxi());
+        JsonObject jsonVelo = new JsonObject();
+        jsonVelo.addProperty("id", id);
+        jsonVelo.addProperty("nom", velo.getNom()+" "+velo.getPrenom());
+        jsonVelo.addProperty("disponibilite", str);
+        jsonVelo.addProperty("adresse", velo.getAdresse());
+        jsonVelo.addProperty("email", velo.getMail());
+        jsonVelo.addProperty("poidsMax", velo.getChargeMaxi());
         
         reponse.setContentType("text/html;charset=UTF-8");
         PrintWriter out = null;    
@@ -63,7 +63,7 @@ public class DetailDroneAction extends Action{
         } catch (IOException ex) {
             Logger.getLogger(DetailDroneAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        out.println(jsonDrone);
+        out.println(jsonVelo);
         out.close();
     }
     

@@ -77,6 +77,7 @@ public class GetActeursAction extends Action{
             jsonVelo.addProperty("poidsMax", velo.getChargeMaxi());
             jsonVelo.addProperty("latitude", velo.getLatitude());
             jsonVelo.addProperty("longitude", velo.getLongitude());
+            jsonVelo.addProperty("idLivreur", velo.getIdLivreur());
             jsonListe.add(jsonVelo);
         }
         jsonContainer.add("velos", jsonListe);

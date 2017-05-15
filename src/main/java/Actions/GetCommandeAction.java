@@ -29,8 +29,10 @@ public class GetCommandeAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse reponse) {
         HttpSession session = request.getSession(true);
         Livreur livreur = (Livreur) session.getAttribute("livreur");
-        Commande commande = livreur.getCmdeEnCours();
         
+        Commande commande = livreur.getCmdeEnCours();
+        System.out.println("dans action GetCommandeAction");
+        System.out.println("livreur: "+livreur);
         JsonObject jsonContainer = new JsonObject();
 		// contrairement à commande, qui est le contenu (les produtis commandés), commandeEnPers est le contenant           
         JsonObject jsonCmdEnPers = new JsonObject();
@@ -79,7 +81,7 @@ public class GetCommandeAction extends Action{
         
         jsonContainer.add("commandeEnPers", jsonCmdEnPers);
         jsonContainer.add("livreur",jsonLivreur);
-        
+        System.out.println("jsonCmdEnPers:"+jsonCmdEnPers);
         // Envoi de la réponse
         reponse.setContentType("text/html;charset=UTF-8");
         PrintWriter out = null;    
