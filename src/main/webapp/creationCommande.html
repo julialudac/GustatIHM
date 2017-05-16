@@ -342,17 +342,14 @@ and open the template in the editor.
                             quantite: $(tr).find("#td_quantite").text()
                         },
                         dataType: 'json'
-                    })
-					.done(function(data){
-						alert(data.prixSuppr);
-						
-					});
+                    })			
                 });
                 var tbody=tr.parentNode;  
                 tbody.removeChild(tr);  
                 var my_span = document.getElementById("sum");
                 my_span.innerHTML  = calculerSum(document.getElementById("tab_panier"),2);
-                      
+                var my_span2 = document.getElementById("sum_validation");
+                my_span2.innerHTML  = calculerSum(document.getElementById("tab_panier"),2);
             }
             function calculerSum(table,column){
                 var trs=table.getElementsByTagName('tr');
@@ -410,6 +407,12 @@ and open the template in the editor.
                 if (totalAPayer>0){
                     $("#quantite").val(0);
                     $("#total").text(0);
+                    var trs_produits = $('[id=tr_produits]');
+                    var i;
+                    for (i=0;i<trs_produits.length;i++){
+                        //console.log(trs_restaurants[i]);
+                        trs_produits[i].style.backgroundColor=defaultColor;
+                    }
                     document.getElementById("Commandes").style.display="none";
                     document.getElementById("Validation").style.display="block";
                     document.getElementById("validTab").style.backgroundColor="brown";
@@ -635,7 +638,8 @@ and open the template in the editor.
                     <span>Nous n'avez pas encore choisi de produit</span>
                     </div>
                     <div id='choisir' style="display: none;">
-                        Quantité: <input type="text" id='quantite' oninput="calculer()" ><br/>
+                        
+                        Quantité: <input type="text" id='quantite' oninput="calculer()" onkeypress="this.value=this.value.replace(/\D/g,'')"><br/>
                         <script>
                             $('input[type=number]').keypress(function(e) {
                                 if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
