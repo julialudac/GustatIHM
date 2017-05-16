@@ -28,14 +28,8 @@ public class CloturerCommandeParGestionnaireAction extends Action{
         System.out.println(idStr);
         long id = parseLong(idStr.substring(1));
         System.out.println(id);
-        List<Livreur> listDrone = ServiceMetier.findAllDrones();
-        LivreurDrone drone = null;
-        for(Livreur l:listDrone){
-            if (l.getIdLivreur()==id){
-                drone = (LivreurDrone) l;
-                break;
-            }
-        }
+        LivreurDrone drone = (LivreurDrone) request.getSession().getAttribute("livreur");
+        System.out.println(drone);
         ServiceMetier.cloturerCommandeLivreur(drone);
     }
 }

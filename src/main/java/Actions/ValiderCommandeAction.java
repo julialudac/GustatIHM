@@ -65,7 +65,7 @@ public class ValiderCommandeAction extends Action{
         } else {
             System.out.println("Dans le cas pas de livreur disponible");
             ServiceMetier.traiterCommande(commande);
-            jsonMessage.addProperty("info", "Aucun livreur n'est actuellement disponible pour traiter votre commande.Veuillez réessayer ultérieurement.");
+            jsonMessage.addProperty("info", "Aucun livreur n'est actuellement disponible pour traiter votre commande. Veuillez réessayer ultérieurement.");
             out.println(jsonMessage);
             out.close();
         }

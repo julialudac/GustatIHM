@@ -513,6 +513,34 @@ and open the template in the editor.
                 retour2();
                 retour1();
             }
+            /*function divRestaurant(){
+                if (document.getElementById("Restaurants").style.display=="block"){
+                    
+                } else if (document.getElementById("Commandes").style.display=="block"){
+                    retour1();
+                } else {
+                    retour2();
+                    retour1();
+                }
+            }
+            function divCommande(){
+                if (document.getElementById("Restaurants").style.display=="block"){
+                    suivant1();
+                } else if (document.getElementById("Commandes").style.display=="block"){
+                    
+                } else {
+                    retour2();
+                }
+            }
+            function divValidation(){
+                if (document.getElementById("Restaurants").style.display=="block"){
+                    suivant1();
+                    suivant2();
+                } else if (document.getElementById("Commandes").style.display=="block"){
+                    suivant2();
+                } else {
+                }
+            }*/
         </script>
         
     </head>
@@ -523,9 +551,9 @@ and open the template in the editor.
             <span class='centralH'>
                 <span style="background-color:brown;" id="restoTab">Restaurants</span>
                 <span> > </span>
-                <span style="cursor:pointer" id="commandeTab">Commande</span>
+                <span  id="commandeTab">Commande</span>
                 <span> > </span>
-                <span style="cursor:pointer" id="validTab">Validation</span>
+                <span  id="validTab">Validation</span>
             </span>
             <select style="background-color: brown; width: 200px;" name="listeDeconn" class="statusConn">
                 <option value="username" id="connection">< username ></option>
