@@ -163,6 +163,6 @@ th,td{
     height: 30px;
 }
 
-#choisir{
-    
+#cp{
+    position : relative;
 }
