@@ -125,6 +125,11 @@ public class ActionServlet extends HttpServlet {
                 action = new DetailVeloAction();
                 action.execute(request, reponse);
                 break;
+            case "getCommandeParL":
+                action = new GetCommandeLAction();
+                action.execute(request, reponse);
+                break;
+                
         }
     }
 

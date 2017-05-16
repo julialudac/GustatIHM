@@ -13,6 +13,8 @@ and open the template in the editor.
         <script src="js/jquery.steps.js"></script>
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script language="javascript">
+            var selection; // contiendra à chaque fois l'id de l'item sélectionné 
+            
             var defaultColor="#ffffff";
             var overColor="yellow";
             var clickColor="pink";
@@ -26,6 +28,8 @@ and open the template in the editor.
                     obj.style.backgroundColor=defaultColor;
             }
             function click_color(obj){
+                selection = $(obj).find("#idVelo").text();
+		//selection = selection.substring(1);
                 //alert("chooseRow="+chooseRow);
                 //console.log("dans function clickcolor");
                 var tb=obj.parentNode.parentNode;
@@ -49,8 +53,7 @@ and open the template in the editor.
                     })
                     .done(function(data) {
                         var velo = data;
-                        var contenuHtml = '<h2 id="h2_idDrone">Drone n'+velo.id+'</h2>' 
-                                            + '<div>'+'<h3>Nom prénom</h3>'
+                        var contenuHtml = '<div>'+'<h3>Nom prénom</h3>'
                                             + velo.nom+'</div>'
                                             + '<div>'+'<h3>Adresse</h3>'
                                             + velo.adresse+'</div>'
@@ -61,17 +64,17 @@ and open the template in the editor.
                                             + '<div>'+'<h3>Poids max</h3><span>'
                                             + velo.poidsMax+'</span></div>';
                         $('#descr').html(contenuHtml);
+                        $("#detailsC").show();
                     })
                     .fail(function() {
                         $('#descr').html('ERREUR de chargement');
                     })
                     .always(function() {
-                        //
                     });
                 });
             }
             function DetailCommande(){
-                window.open("detailCommande.html");
+		window.window.open("detailCommande.html?"+selection);
             }
         </script>
     </head>
@@ -96,19 +99,21 @@ and open the template in the editor.
         <h2>Liste des vélos</h2>
         
         <!-- Tableau vélos -->
-        <div>
+        <div class="morceau">
             <table id="tabVelos">
             </table>  
         </div>
         <!-- Détail vélo -->
-        <div>
+        <div class="morceau">
             <div id="descr">Pas de vélo sélectionné</div>
-            <input type="button" value="Détails Commande" onclick="DetailCommande()"/>
+            <input id="detailsC" type="button" value="Détails Commande" style="display:none;" onclick="DetailCommande()"/>
         </div>
         
         
         <script>
             $(function(){
+                
+                var selection; // contiendra à chaque fois l'id de l'item sélectionné 
                 
                 // requête ajax pour récupérer les vélos 
                 $.ajax({

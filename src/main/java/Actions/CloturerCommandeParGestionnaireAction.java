@@ -26,7 +26,7 @@ public class CloturerCommandeParGestionnaireAction extends Action{
         System.out.println("Je suis dans action CloturerCommandeAction");
         String idStr = request.getParameter("idDrone");
         System.out.println(idStr);
-        long id = parseLong(idStr.substring(7, idStr.length()));
+        long id = parseLong(idStr.substring(1));
         System.out.println(id);
         List<Livreur> listDrone = ServiceMetier.findAllDrones();
         LivreurDrone drone = null;

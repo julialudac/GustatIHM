@@ -263,14 +263,7 @@ and open the template in the editor.
                 } else if(parseInt(total)<=0){
                     alert("la quantite doit etre positive");
                 } else {
-                    //supprimer dans la liste de produits
-                    var trProduit = document.getElementById('tr_produits');
-                    var tbProduits = trProduit.parentNode;
-                    var tr_produitChoisi=tbProduits.rows[chooseRow];
-                    console.log(tr_produitChoisi);
-                    //tbProduits.removeChild(tr_produitChoisi);  
-                    tr_produitChoisi.style.display = 'none';
-                    
+                                     
                     //ajouter dans le pannier
                     var nomProduit = $('#nomProduit').text();
                     var quantite = document.getElementById("quantite").value;
@@ -278,7 +271,6 @@ and open the template in the editor.
                     var my_panier = document.getElementById("tab_panier");
                     var newTR     = document.createElement("tr");
                     var newNom    = document.createElement("td");
-                    newNom.id = "td_nomProduit";
                     var newText1  = document.createTextNode(nomProduit);
                     var newQuantite    = document.createElement("td");
                     newQuantite.id = "td_quantite";
@@ -309,6 +301,9 @@ and open the template in the editor.
                     newTR.appendChild(newQuantite);
                     newTR.appendChild(newPrix);
                     my_panier.appendChild(newTR);
+                    
+                    $("#quantite").val(0); // remise à 0 du choix de qté 
+          
                     //chaque fois on clique sur ajouter, on va maj le commande en serveur
                     $(function() {
                         $.ajax({
@@ -349,25 +344,7 @@ and open the template in the editor.
                 tbody.removeChild(tr);  
                 var my_span = document.getElementById("sum");
                 my_span.innerHTML  = calculerSum(document.getElementById("tab_panier"),2);
-                
-                //réapparître de la produit dans la liste
-                //alert("ad");
-                var idProduit = $(tr).find('#div_idProduit').text();
-                //var trProduit = document.getElementById('tr_produits');
-                //var tbProduits = trProduit.parentNode;
- 
-                console.log(idProduit);
-                console.log( $("#tb_produits").find("tr").length);
-                $("#tb_produits").find("tr").each(function(){
-                    console.log("dans jquery function");
-                    var divIdProduit=$(this).find('#idProd');
-                    console.log(divIdProduit.text());
-                    if(idProduit==divIdProduit.text()){
-                        console.log("divIdProduit.text() = "+divIdProduit.text());
-                        console.log(divIdProduit.parent().parent());
-                        divIdProduit.parent().parent().get(0).style.display = "block";
-                    }
-                });
+                      
             }
             function calculerSum(table,column){
                 var trs=table.getElementsByTagName('tr');
@@ -708,7 +685,8 @@ and open the template in the editor.
                     Total a payer: <span id='sum_validation'>0</span><br/>
                 </div>
                 <button type="button" class="cancel" onclick="retour2()">Retour</button>
-                <button type="button" class="valid" onclick="valider()">Valider</button>
+                <button type="button" class="valid" onclick="if (confirm('Vous voulez confirmer votre commande?')) 
+                    {valider();}else{return false;}">Valider</button>
             </div>
         </div>
         <footer>

@@ -12,6 +12,8 @@ and open the template in the editor.
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.steps.js"></script>
         <script language="javascript">
+            var selection; // contiendra à chaque fois l'id de l'item sélectionné 
+		
             var defaultColor="#ffffff";
             var overColor="yellow";
             var clickColor="pink";
@@ -25,6 +27,8 @@ and open the template in the editor.
                     obj.style.backgroundColor=defaultColor;
             }
             function click_color(obj){
+		selection = $(obj).find("#idDrone").text();
+		selection = selection.substring(1);
                 //alert("chooseRow="+chooseRow);
                 //console.log("dans function clickcolor");
                 var tb=obj.parentNode.parentNode;
@@ -58,6 +62,8 @@ and open the template in the editor.
                                             + '<div>'+'<h3>Poids max</h3><span>'
                                             +  drone.poidsMax+'</span></div>';
                         $('#descr').html(contenuHtml);
+						$('#detailsC').show();
+						$('#clot').show();
                     })
                     .fail(function() {
                         $('#descr').html('ERREUR de chargement');
@@ -76,12 +82,25 @@ and open the template in the editor.
                             type: 'GET',
                             data: {
                                 action: 'cloturerParGestionnaire',
-                                idDrone: $('#h2_idDrone').text()
+                                idDrone: selection
                             },
                             dataType: 'json'
                         })
+						.done(function(data){
+							
+							
+						})
+						.fail(function(data){
+							
+							
+						})
+						.always(function(data){
+							alert("La commande est bien cloturé");
+							
+						})
+						
                     })
-                    alert("La commande est bien cloturé");
+                    
                     //raifrachir le tableu pour maj la disponibilite de drone
                     $(function(){
                         // requête ajax pour récupérer les drones 
@@ -120,7 +139,7 @@ and open the template in the editor.
                 }
             }
             function DetailCommande(){
-                window.open("detailCommande.html");
+		window.window.open("detailCommande.html?"+selection);
             }
         </script>
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
@@ -146,15 +165,15 @@ and open the template in the editor.
         <h2>Liste des drones</h2>
         
         <!-- Tableau drones -->
-        <div>
+        <div  class="morceau">
             <table id="tabDrones">
             </table>  
         </div>
         <!-- Détail drone -->
-        <div>
+        <div  class="morceau">
             <div id="descr">Pas de drône sélectionné</div>
-            <input type="button" value="Détails Commande" onclick="DetailCommande()"/> <br/>
-            <input type="button" value="Clôturer Commande" onclick="cloturer()"/>
+            <input id="detailsC" style="display:none;" type="button" value="Détails Commande" onclick="DetailCommande()"/> <br/>
+            <input id="clot" style="display:none;" type="button" value="Clôturer Commande" onclick="cloturer()"/>
         </div>
         
         

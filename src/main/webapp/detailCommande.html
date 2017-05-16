@@ -11,48 +11,50 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/roundBorder.css" rel="stylesheet" type="text/css">
         <script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
-        <script>
-        </script>
     </head>
     <body>
         <script>
             $(function(){
+				var idL = window.location.search.substring(1);
                 $.ajax({
                     url: './ActionServlet',
-                    type: 'POST',
+                    type: 'GET',
                     data: {
-                        action: 'getCommande'
+                        action: 'getCommandeParL',
+						idLivreur: idL
                     },
                     dataType: 'json'
                 })
                 .done(function(data) {
-                    // contrairement à commande, qui est le contenu (les produtis commandés), commandeEnPers est le contenant
-                    plein = data.commandeEnPers.plein;
-                    // Si la commande est là
-                    if(plein==1){
-                        var commande = data.commande;
-                        var contenuHtml = '<table><thead><th>Nom</th><th>Quantite</th><th>Prix<th></thead><tbody>';
-                        var i; 
-                        for (i = 0; i < commande.length; i++) {
-                            //var link = "restaurant.html?idRestaurant="+restaurants[i].id;
-                            contenuHtml += '<tr><td> ' 
-                                    + commande[i].nom + '</td><td>'
-                                    + commande[i].quantite + '</td><td>'
-                                    + commande[i].prix + '€</td></tr> ';
-                        }
-                        contenuHtml += '</tbody></table>';
-                        $('#commandeEnC').html(contenuHtml);
-                        $('#p_Restaurant').html(data.restaurant.adresseRestaurant);
-                        $('#p_Client').html(data.client.adresseClient);
-                    }else{
-                        $('#commandeEnC').html('Pas de commande en cours');
-                        $('#p_Restaurant').html("Donc pas de restaurant mobilisé ^^");
-                        $('#p_Client').html("Donc pas de client à satisfaire pour le moment XD");
-                    }
+                        var produits = data.produits;
+						// pourquoi avant ça marchait pas ??? Je pense que c'est un bug, car quand je redémarre
+						// Netbeans et GlassFish, ça remarche. 
+						var adrC = data.adr[0].a;
+						var adrR = data.adr[1].a;
+						if(produits!=null){
+							var contenuHtml = '<table><thead><th>Nom</th><th>Qté<th></thead><tbody>';
+							var i; 
+							for (i = 0; i < produits.length; i++) {
+								//var link = "restaurant.html?idRestaurant="+restaurants[i].id;
+								contenuHtml += '<tr><td> ' 
+										+ produits[i].nom + '</td><td>'
+										+ produits[i].quantite + '</td><td>';
+							}
+							contenuHtml += '</tbody></table>';
+							$('#commandeEnC').html(contenuHtml);
+							$('#p_Restaurant').html(adrR);
+							$('#p_Client').html(adrC);
+						}
+						else{
+							$('#commandeEnC').html("Pas de commande en cours");
+							$('#p_Restaurant').html("-");
+							$('#p_Client').html("-");
+						}
+                        
                 })
 
                 .fail(function() {
-                    $('#commandeEnC').html('Erreur de chargement de la BD');
+                    $('#commandeEnC').html('Pas de commande en cours');
                     $('#p_Restaurant').html("-");
                     $('#p_Client').html("-");
                 }) 
