@@ -26,6 +26,7 @@ and open the template in the editor.
                     obj.style.backgroundColor=defaultColor;
             }
             function click_color(obj){
+				$("#quantite").val(0);
                 //alert("chooseRow="+chooseRow);
                 //console.log("dans function clickcolor");
                 var tb=obj.parentNode;
@@ -303,6 +304,7 @@ and open the template in the editor.
                     my_panier.appendChild(newTR);
                     
                     $("#quantite").val(0); // remise à 0 du choix de qté 
+                    calculer();
           
                     //chaque fois on clique sur ajouter, on va maj le commande en serveur
                     $(function() {
@@ -339,6 +341,10 @@ and open the template in the editor.
                         },
                         dataType: 'json'
                     })
+					.done(function(data){
+						alert(data.prixSuppr);
+						
+					});
                 });
                 var tbody=tr.parentNode;  
                 tbody.removeChild(tr);  

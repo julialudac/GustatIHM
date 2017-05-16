@@ -5,14 +5,19 @@
  */
 package Actions;
 
+import com.google.gson.JsonObject;
 import com.insa.gustatif.metier.modele.Client;
 import com.insa.gustatif.metier.modele.Commande;
 import com.insa.gustatif.metier.modele.Produit;
 import com.insa.gustatif.metier.modele.ProduitCommande;
 import com.insa.gustatif.metier.service.ServiceMetier;
+import java.io.IOException;
+import java.io.PrintWriter;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -71,6 +76,20 @@ public class ModifierCommandeAction extends Action{
             session.setAttribute("commande", commande);
             //connectionSession.creerCommande(client.getId(), commande);
             System.out.println("CommandeID: "+commande.getNumCommande());
+            
+            // -------------envoi du prix du truc à supprimer--------------
+            JsonObject prixSuppr = new JsonObject();
+            prixSuppr.addProperty("prixSuppr", commande.getPrixTotal());
+            reponse.setContentType("text/html;charset=UTF-8");
+            PrintWriter out = null;    
+            try {
+                out = reponse.getWriter();
+            } catch (IOException ex) {
+                Logger.getLogger(GetRestaurantsAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            out.println(prixSuppr);
+            out.close();
+            
         }
         
     }
